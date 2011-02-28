@@ -1,22 +1,22 @@
 
 function getDatabase() {
-    return openDatabaseSync("TestWeather", "1.0", "StorageDatabase for weather application", 100000);
+    return openDatabaseSync("WTFTeste1", "1.0", "StorageDatabase for weather application", 100000);
 }
 
 function initialize() {
+    console.log("INITIALIZE");
     var db = getDatabase();
     db.transaction( function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS Location(id INTEGER UNIQUE PRIMARY KEY, name TEXT,country TEXT, longitudine TEXT, latitude TEXT, date_added TIMESTAMP, current BOOL    )');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS Location_Weather(idLocation INTEGER UNIQUE, idWeather_Data INTEGER UNIQUE )');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS Weather_Data(id INTEGER UNIQUE PRIMARY KEY, date DATETIME,temperature FLOAT, temp_min FLOAT, temp_max FLOAT, precipitation FLOAT, wind_speed FLOAT, humidity FLOAT, pressure FLOAT, weather_desc TEXT, date_added TIMESTAMP )');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Location_Weather(idWeather_Data INTEGER UNIQUE, idLocation INTEGER, type STRING )');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Weather_Data(id INTEGER UNIQUE PRIMARY KEY, date DATETIME,temperature FLOAT, temp_min FLOAT, temp_max FLOAT, precipitation FLOAT, wind_speed FLOAT, humidity FLOAT, pressure FLOAT, weather_desc TEXT, date_forecast )');
                });
-    console.log(db);
 }
 
 function cleanDB() {
     var db = getDatabase();
     db.transaction( function(tx) {
-        var rs=tx.executeSql('DELETE FROM Location');
+        var rs=tx.executeSql('DROP DATABASE WTFTeste ');
                        if (rs.rowsAffected > 0) {
                            res="OK";
                        } else {
@@ -44,15 +44,16 @@ return res;
 }
 
 /* Save weather data to DB */
-function setDBWeather(date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc, date_added) {
+function setDBWeather(date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast) {
     var db = getDatabase();
     var res = "";
     var id=0;
-    id= this.getNumRows("Weather_Data")+1;
+    id=getNumRows("Weather_Data")+1;
     db.transaction(function(tx) {
-        var rs = tx.executeSql('INSERT OR REPLACE INTO Weather_Data VALUES (?,?,?,?,?,?,?,?,?,?,?);', [id, date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc, date_added]);
+        console.log("DATABASE:"+date);
+        var rs = tx.executeSql('INSERT INTO Weather_Data VALUES (?,?,?,?,?,?,?,?,?,?,?);', [id,date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast])
         if (rs.rowsAffected > 0) {
-            res = "OK";
+            res = id;
         } else {
             res = "Error";
         }
@@ -61,12 +62,12 @@ return res;
 }
 
 /* Save location-weather connection */
-function setDBLocationWeather(idLocation,idWeather)
+function setDBLocationWeather(idWeather, idLocation, type)
 {
     var db = getDatabase();
     var res = "";
     db.transaction(function(tx) {
-        var rs = tx.executeSql('INSERT OR REPLACE INTO Location_Weather VALUES (?,?);', [idLocation,idWeather]);
+        var rs = tx.executeSql('INSERT INTO Location_Weather VALUES (?,?,?);', [idLocation,idWeather,type]);
         if (rs.rowsAffected > 0) {
             res = "OK";
         } else {
@@ -178,17 +179,19 @@ function deleteDataRow(id, table) {
     return res;
 }
 
- function getWeatherID(locationID){
+ function getWeatherID(locationID,type){
     var db = getDatabase();
     var res=[];
 
     db.transaction(function(tx) {
-            var rs = tx.executeSql('SELECT idWeather_Data FROM Location_Weather WHERE idLocation=?',[locationID]);
+            var rs = tx.executeSql('SELECT idWeather_Data FROM Location_Weather WHERE idLocation=? and type=?',[locationID,type]);
             if (rs.rows.length > 0) {
                 for (var i=0;i<rs.rows.length;i++){
-                    res[i] = rs.rows.item(i);
+                    res[i] = rs.rows.item(i).idWeather_Data;
                 }
             } else {
-                res = "Unknown";     }  })
+                res = -1;     }  })
     return res;
 }
+
+

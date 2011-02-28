@@ -1,11 +1,9 @@
 import QtQuick 1.0
-import "LocationData.js" as locData
+import "WeatherData.js" as WData
 
     XmlListModel {
         id:currentModel
-        property string locationID
-        property string queryString:locData.createQueryString(locationID,"current");
-        source:"http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString
+        source: "" 
         query: "/data/current_condition"
 
         XmlRole { name: "temperature"; query: "temp_C/number()" }
@@ -19,7 +17,16 @@ import "LocationData.js" as locData
 
         onStatusChanged: {
             if (status == XmlListModel.Ready) {
-                console.log("ok "+currentModel.get(0).temperature);
+            	console.log("statusChanged:"+XmlListModel.Ready);
+                if (currentModel.count>0){
+                    var modelData=currentModel.get(0);
+                    var wID=0;
+                    wID=WData.saveCurrentWeather("current",gLocationID,modelData.temperature,"","",modelData.precipitation,modelData.windspeed,modelData.humidity,modelData.pressure,modelData.weather,"");
+                    window.modelReady=true;
+                    //returns the id of the row which was saved in Weather_Data
+                    console.log("ID-ul ESTE:"+wID);
+                    window.modelData=wID;
+                }
             }
         }
     }

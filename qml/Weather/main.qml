@@ -3,6 +3,8 @@ import QtMobility.sensors  1.1
 import "engine/utils.js" as Utils
 import "engine/init.js" as Init
 import "screens"
+import "engine"
+import"engine/WeatherData.js" as Test
 import "screens/components"
 
 Rectangle {
@@ -16,6 +18,10 @@ Rectangle {
     property string cBackgroundNight:backNightPortrait
     property bool isLandscape: (body.width>450)
     color:"#333"
+	property int gLocationID:1
+    property bool modelReady: false
+    property int modelData: 0
+    property variant forecastData:null
 
     function switchView(newView) {
         cView=newView;
@@ -46,6 +52,53 @@ Rectangle {
         Init.cleanDB();
     }
 
+    /*returns the current weather for a location ID
+      the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
+    */
+
+    function getCurrentInfo(locID){
+        var savedCurrent="";
+        var savedData=Test.verifyLastReq(locID,"current");
+        //if weather data for locID has not been saved in DB in the last hour
+        if (savedData == "")
+        {
+            //get the weather data from server
+            var queryString=Test.createQueryString(locID,"current");
+            test1.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+            console.log(test1.source);
+            test1.reload();
+            //get the weather data from DB
+            savedCurrent=Test.getWeatherRow(window.modelData);
+        }
+        else{
+            savedCurrent=savedData;
+        }
+    return savedCurrent;
+    }
+
+    /*returns the forecast for the interval today -> today+4days
+      the answer includes 5 objects, each having the following fields:date,temp_min,temp_max,precipitation,wind_speed,weather_desc
+    */
+function getForecastInfo(locID){
+        var savedForecast=[];
+        var alreadyData=Test.verifyLastReq(locID,"forecast");
+        if (alreadyData.length<1)
+        {
+            var queryString=Test.createQueryString(locID,"forecast");
+            fModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+            console.log(fModel.source);
+            fModel.reload();
+            var weatherIDs=window.forecastData;
+            //foreach id returned by the model, get the row from database
+            for (var i=0;i<weatherIDs.length; i++){
+                savedForecast=Test.getWeatherRow(weatherIDs[i]);
+            }
+        }
+        else{
+           savedForecast=alreadyData;
+        }
+        return savedForecast;
+    }
 
     Rectangle {
         id:body
@@ -287,6 +340,12 @@ Rectangle {
         Component.onCompleted: {
             Init.initDB();
             switchView("Home");
+        }
+	CurrentWeatherModel{
+            id:test1
+        }
+        ForecastModel{
+            id:fModel
         }
     }
 }

@@ -1,6 +1,8 @@
 import QtQuick 1.0
 import "../screens/homeBehaviour.js" as HomeBehaviour
 import "../engine/LocationData.js" as LocationData
+import"../engine/WeatherData.js" as WeatherData
+import "../engine/init.js" as Init
 import "components"
 
 Item {

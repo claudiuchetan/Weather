@@ -56,19 +56,3 @@ function deleteLocation(id){
     }
 }
 
-// read weather data for location id and type:current, forecast
-function createQueryString(locationID,type){
-    var numDays=0;
-    var key="3d571c8060200122110802";
-    var answer=getDataRow(locationID,"Location");
-    var city=answer.name;
-    var country=answer.country;
-    if (type=="current"){
-        numDays=1;
-    }
-    else{
-        numDays=5;
-    }
-    var query=city+","+country+"&format=xml&num_of_days="+numDays+"&key="+key;
-    return query;
-}

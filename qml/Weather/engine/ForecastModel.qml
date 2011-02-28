@@ -1,23 +1,38 @@
 import QtQuick 1.0
-import "LocationData.js" as locData
+import "WeatherData.js" as WInfo
 
-    XmlListModel {
-        id:forecastModel
-        property string locationID
-        property string queryString:locData.createQueryString(locationID,"forecast");
-        source:"http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString
-        query: "/data/weather"
+XmlListModel {
+    id:forecastModel
+    source:""
+    query: "/data/weather"
 
-        XmlRole { name: "tempMax"; query: "tempMaxC/number()" }
-        XmlRole { name: "tempMin"; query: "tempMinC/number()" }
-        XmlRole { name: "windspeed"; query: "windspeedKmph/number()" }
-        XmlRole { name: "winddirection"; query: "winddirection/string()" }
-        XmlRole { name: "weatherDesc"; query: "weatherDesc/string()" }
-        XmlRole { name: "precipitation"; query: "precipMM/number()" }
+    XmlRole { name: "date"; query: "date/string()" }
+    XmlRole { name: "tempMax"; query: "tempMaxC/number()" }
+    XmlRole { name: "tempMin"; query: "tempMinC/number()" }
+    XmlRole { name: "windspeed"; query: "windspeedKmph/number()" }
+    XmlRole { name: "winddirection"; query: "winddirection/string()" }
+    XmlRole { name: "weatherDesc"; query: "weatherDesc/string()" }
+    XmlRole { name: "precipitation"; query: "precipMM/number()" }
 
-                onStatusChanged: {
-            if (status == XmlListModel.Ready) {
-                console.log("ok "+forecastModel.get(0).temperature);
+    onStatusChanged: {
+        if (status == XmlListModel.Ready) {
+            var wIDs=[];
+            var itemsNo=forecastModel.count;
+            if (itemsNo>0){
+                for (var i=0;i<itemsNo;i++) {
+                    var forecastData=forecastModel.get(i);
+                    var wID=0;
+                    wID=WInfo.saveCurrentWeather("forecast",gLocationID,"",forecastData.tempMin,forecastData.tempMax,forecastData.precipitation,forecastData.windspeed,"","",forecastData.weatherDesc,forecastData.date);
+                    wIDs=wID;
+                    }
+            window.modelReady=true;
+            var temp = window.forecastData;
+            temp=wIDs;
+            //return all the ids in Weather_Data which were saved in DB
+            window.forecastData=temp;
             }
         }
     }
+}
+
+
