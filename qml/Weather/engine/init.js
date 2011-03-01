@@ -16,4 +16,24 @@ function initDB() {
 function clean(){
     cleanDB();
 }
+function addLocation(name) {
+    console.log("adding "+name);
+    setDBLocation(name,"Romania", "123", "456", "02/12/2011","false");
+}
+
+
+function deleteLocation(name) {
+    var db = getDatabase();
+    var res="";
+
+    db.transaction(function(tx) {
+            var rs = tx.executeSql('DELETE FROM Location WHERE name=?;', [name]);
+            if (rs.rowsAffected > 0) {
+                res="OK";
+            } else {
+                console.log("!!!");
+                res = "Unknown";     }  })
+    return res;
+}
+
 

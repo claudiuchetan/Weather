@@ -2,6 +2,8 @@ import QtQuick 1.0
 import QtMobility.sensors  1.1
 import "engine/utils.js" as Utils
 import "engine/init.js" as Init
+import "screens/homeBehaviour.js" as HomeBehaviour
+import "engine/LocationData.js" as LocationData
 import "screens"
 import "engine"
 import"engine/WeatherData.js" as Test
@@ -17,8 +19,10 @@ Rectangle {
     property string cBackgroundDay:backDayPortrait
     property string cBackgroundNight:backNightPortrait
     property bool isLandscape: (body.width>450)
+    property ListModel locationsModel: lModel
+    property string currentLocation: "Iasi"
     color:"#333"
-	property int gLocationID:1
+    property int gLocationID:1
     property bool modelReady: false
     property int modelData: 0
     property variant forecastData:null
@@ -51,6 +55,16 @@ Rectangle {
     function cleanOnExit() {
         Init.cleanDB();
     }
+
+    function removeLocation(name) {
+        Init.deleteLocation(name);
+        lModel.reload();
+    }
+
+    function addLocation(name) {
+        Init.addLocation(name);
+        lModel.reload();
+	}
 
     /*returns the current weather for a location ID
       the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
@@ -100,15 +114,32 @@ function getForecastInfo(locID){
         return savedForecast;
     }
 
+    ListModel  {
+        function reload() {
+            lModel.clear();
+            var locations=LocationData.listLocations();
+            var j=0;
+            for (var i=0;i<locations.length;i++) {
+                if (j>=HomeBehaviour.weatherDev.length) j=0;
+                locationsModel.append({
+                                 "degrees": HomeBehaviour.weatherDev[j].degrees,
+                                 "state": HomeBehaviour.weatherDev[j].state,
+                                 "name": locations[i].name,
+                                 "icon":HomeBehaviour.weatherDev[j].icon});
+                j++;
+            }
+        }
+        id: lModel
+        Component.onCompleted:{
+            reload();
+        }
+    }
+
     Rectangle {
         id:body
         color: "#00000000"
         width:parent.width
         height: parent.height
-
-        //Add the background
-//        Background {
-//        }
 
         Image {
             id:background
@@ -170,26 +201,61 @@ function getForecastInfo(locID){
         }
 
         Rectangle {
-            width:isLandscape?32:body.width
-            height:isLandscape?body.height:32
-            border.width: 1
+            id:secondaryMenu
+            width:body.width
+            height:50
+            opacity: 0.5
             color:"#00000000"
+            z:1000
             anchors.margins: {
                 top: 9
                 bottom: 9
                 left: 9
                 right: 9
             }
-            Flow {
-                flow: isLandscape?Flow.TopToBottom:Flow.LeftToRight
-                Image {
-                    source: "images/settings.png"
+            Button {
+                id:buttonSettings
+                icon:"settings"
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 10
+                customHeight: 24
+                customWidth: 24
+                Connections {
+                    target: buttonSettings.mouseArea
+                    onClicked : {
+                        switchView("Settings");
+                    }
                 }
-                Image {
-                    source: "images/refresh.png"
+            }
+            Button {
+                id:buttonRefresh
+                icon:"refresh"
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                customHeight: 24
+                customWidth: 24
+                Connections {
+                    target: buttonRefresh.mouseArea
+                    onClicked : {
+                        refresh();
+                    }
                 }
-                Image {
-                    source: "images/logout.png"
+            }
+            Button {
+                id:buttonLogout
+                icon:"logout"
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                customHeight: 24
+                customWidth: 24
+                Connections {
+                    target: buttonLogout.mouseArea
+                    onClicked : {
+//                        cleanOnExit();
+                        Qt.quit();
+                    }
                 }
             }
         }
@@ -219,7 +285,10 @@ function getForecastInfo(locID){
             Button {
                 id:buttonHome
                 icon:"home"
+                customWidth: 53
+                customHeight: 72
                 anchors.top: parent.top
+                anchors.topMargin: -7
                 Connections {
                     target: buttonHome.mouseArea
                     onClicked : {
@@ -231,6 +300,7 @@ function getForecastInfo(locID){
                 id:buttonForecast
                 icon:"forecast"
                 anchors.top: parent.top
+                customWidth: 45
                 Connections {
                     target: buttonForecast.mouseArea
                     onClicked : {
@@ -241,6 +311,7 @@ function getForecastInfo(locID){
             Button {
                 id:buttonCharts
                 icon:"graphics"
+                customWidth: 42
                 anchors.top: parent.top
                 Connections {
                     target: buttonCharts.mouseArea
@@ -280,27 +351,6 @@ function getForecastInfo(locID){
                     }
                 }
             ]
-        }
-
-
-
-        /*
-      The secondary options menu; always appears as a bar at the bottom
-      !need to add icon so that the slide action is more clear to the user
-      */
-        Drawer {
-            id:drawer
-            z:99
-            Connections {
-                target:  drawer.flick
-                onContentYChanged: {
-                    if (drawer.flick.contentY>10) {
-                        mainMenu.state="off";
-                    } else {
-                        mainMenu.state="on";
-                    }
-                }
-            }
         }
 
         /*
