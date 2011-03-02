@@ -10,13 +10,8 @@ function getCurrentLocation()
 
 //list all locations
 function listLocations(){
-    var i=1;
-    var numLocations=getNumRows("Location");
     var answer=[];
-    for (i=1;i<=numLocations;i++){
-        answer[i-1]=getDataRow(i,"Location");
-
-    }
+    answer = getTableData("Location");
     return answer;
 }
 
@@ -32,9 +27,16 @@ function setCurrentLocation(locationID){
 
 //add location in DB witha  name and country
 function addLocation(name, country){
-    var currentTime = new Date();
-    //longitude and latitude temporarly set as 1 until getLocation is implemented
-    setDBLocation(name, country, 1, 1, currentTime,"false")
+    var locID=getDBLocationID(name,country);
+    //if the location with the same name doesn't alerady exist in DB
+    if (locID==0){
+        var currentTime = new Date();
+        //longitude and latitude temporarly set as 1 until getLocation is implemented
+        setDBLocation(name, country, 1, 1, currentTime,"false")
+    }
+    else{
+        console.log("already exists");
+    }
 }
 
 function getLocationID(name,country)
@@ -43,9 +45,9 @@ function getLocationID(name,country)
     return answer;
 }
 
-function deleteLocation(id){
+function deleteLocationbyID(id){
     deleteDataRow(id,"Location");
-    var answer=getWeatherID(id);
+    /*var answer=getWeatherID(id);
     var i=1;
     var numIds=answer.length;
     if (numIds>0){
@@ -53,6 +55,16 @@ function deleteLocation(id){
         deleteDataRow(answer[i],"Weather_Data");
         }
     deleteDataRow(id,"Location_Weather");
-    }
+    }*/
+}
+
+/*function deleteLocationbyName(name,country){
+    var answer=deleteDBLocation(name,country);
+    return answer;
+}*/
+
+function deleteLocationbyName(name){
+    var answer=deleteDBLocation(name);
+    return answer;
 }
 

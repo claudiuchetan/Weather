@@ -89,7 +89,7 @@ Rectangle {
             onClicked : {
                 //                switchView("Settings");
 
-                window.addLocation(input.text);
+                window.addLocation(input.text,"Romania");
             }
         }
         z:backInput.z+1
