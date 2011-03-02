@@ -389,7 +389,7 @@ function getForecastInfo(locID){
             }
         }
         Component.onCompleted: {
-            //Init.initDB();
+//            Init.initDB();
             switchView("Home");
         }
 	CurrentWeatherModel{
