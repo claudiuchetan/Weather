@@ -4,6 +4,7 @@ import "engine/utils.js" as Utils
 import "engine/init.js" as Init
 import "screens/homeBehaviour.js" as HomeBehaviour
 import "engine/LocationData.js" as LocationData
+import "engine/Database.js" as Bla
 import "screens"
 import "engine"
 import"engine/WeatherData.js" as Test
@@ -57,12 +58,12 @@ Rectangle {
     }
 
     function removeLocation(name) {
-        Init.deleteLocation(name);
+        LocationData.deleteLocationbyName(name);
         lModel.reload();
     }
 
     function addLocation(name) {
-        Init.addLocation(name);
+        LocationData.addLocation("Los Angeles", "USA");
         lModel.reload();
 	}
 
@@ -366,7 +367,7 @@ function getForecastInfo(locID){
             }
         }
         Component.onCompleted: {
-            Init.initDB();
+//            Init.initDB();
             switchView("Home");
         }
 	CurrentWeatherModel{

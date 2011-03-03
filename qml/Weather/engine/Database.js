@@ -31,7 +31,8 @@ function setDBLocation(name, country, longitude, latitude, date_added, current) 
     var db = getDatabase();
     var res = "";
     var id=0;
-    id= getNumRows("Location")+1;
+    //id = getNumRows("Location")+1;
+    id=getMaxID("Location")+1;
     db.transaction(function(tx) {
         var rs = tx.executeSql('INSERT OR REPLACE INTO Location VALUES (?,?,?,?,?,?,?);', [id, name, country, longitude, latitude, date_added, current]);
         if (rs.rowsAffected > 0) {
@@ -48,7 +49,8 @@ function setDBWeather(date, temp, temp_min, temp_max, precip, wind, humidity, pr
     var db = getDatabase();
     var res = "";
     var id=0;
-    id=getNumRows("Weather_Data")+1;
+    //id=getNumRows("Weather_Data")+1;
+    id=getMaxID("Weather_Data")+1;
     db.transaction(function(tx) {
         console.log("DATABASE:"+date);
         var rs = tx.executeSql('INSERT INTO Weather_Data VALUES (?,?,?,?,?,?,?,?,?,?,?);', [id,date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast])
@@ -88,10 +90,37 @@ function getNumRows(table)
         if (num >= 0) {
                 res = num;
             } else {
-                res = "Unknown";     }  })
+                res = 0;     }  })
     return res;
+}
 
+function getMaxID(table)
+{
+    var db = getDatabase();
+    var res=0;
+    //var num=0;
+    db.transaction(function(tx) {
+    var rs = tx.executeSql('SELECT MAX(id) as MAXID FROM '+table+';');
+    if (rs.rows.length > 0) {
+        var res1 = rs.rows.item(0).MAXID;
+        res=eval(res1);
+     } else {
+         res = 0;     }  })
+    return res;
+}
 
+function getTableData(table){
+    var db = getDatabase();
+    var res=[];
+
+    db.transaction(function(tx) {
+        var rs = tx.executeSql('SELECT * FROM '+table+';');
+            if (rs.rows.length > 0) {
+                for (var i=0;i<rs.rows.length;i++)
+                    res[i] = rs.rows.item(i);
+            }
+            })
+return res;
 }
 
 function getDataRow(id, table) {
@@ -154,14 +183,13 @@ var db = getDatabase();
 function getDBLocationID(name,country)
 {
     var db = getDatabase();
-    var res="";
+    var res=0;
 
     db.transaction(function(tx) {
             var rs = tx.executeSql('SELECT id FROM Location WHERE name=? and country=?;',[name,country]);
             if (rs.rows.length > 0) {
                 res = rs.rows.item(0).id;
-            } else {
-                res = "Unknown";     }  })
+            }   })
     return res;
 }
 
@@ -193,5 +221,32 @@ function deleteDataRow(id, table) {
                 res = -1;     }  })
     return res;
 }
+
+/*function deleteDBLocation(name,country) {
+    var db = getDatabase();
+    var res="";
+
+    db.transaction(function(tx) {
+            var rs = tx.executeSql('DELETE FROM Location WHERE name=? AND country=?;', [name,country]);
+            if (rs.rowsAffected > 0) {
+                res="OK";
+            } else {
+                res = "Unknown";     }  })
+    return res;
+}*/
+
+function deleteDBLocation(name) {
+    var db = getDatabase();
+    var res="";
+
+    db.transaction(function(tx) {
+            var rs = tx.executeSql('DELETE FROM Location WHERE name=?;', [name]);
+            if (rs.rowsAffected > 0) {
+                res="OK";
+            } else {
+                res = "Unknown";     }  })
+    return res;
+}
+
 
 
