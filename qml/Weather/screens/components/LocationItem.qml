@@ -63,11 +63,8 @@ Rectangle {
         anchors.rightMargin: 8
         customHeight: 16
         customWidth: 15
-        Connections {
-            target: buttonRemove.mouseArea
-            onClicked : {
-                window.removeLocation(value);
-            }
+        onClicked : {
+            window.removeLocation(value);
         }
     }
     Hr {

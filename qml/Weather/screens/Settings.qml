@@ -43,7 +43,7 @@ Rectangle {
         width:countryInput.width-10
         font.pixelSize: 18
         font.capitalization: Font.AllUppercase
-        color:"#333"
+        color:(window.selectedCountry=="")?"#bbb":"#333"
         text:  "Select Country"
         clip:true
         anchors.verticalCenter: countryInput.verticalCenter
@@ -138,10 +138,12 @@ Rectangle {
         anchors.leftMargin: 25
         customHeight: 21
         customWidth: 20
-        Connections {
-            target: buttonAdd.mouseArea
-            onClicked : {
-                window.addLocation(input.text,"Romania");
+        onClicked : {
+            if (window.selectedCountry!="") {
+                window.addLocation(input.text,window.selectedCountry);
+            } else {
+                window.popup.msg="You must choose a country!";
+                window.popup.state="on";
             }
         }
         z:backInput.z+1
@@ -180,15 +182,50 @@ Rectangle {
             delegate:
                 Column {
                 width:parent.width
-                Text {
-                    text: name
-                    color:"#FFF"
-                    height:40
-                    font.pixelSize: 14
-                    verticalAlignment: Text.AlignVCenter
-                    font.bold: true
-                }
-                Hr {
+                Rectangle {
+                    id:countryItemWrapper
+                    height:countryItem.height
+                    width: parent.width
+                    color:"#00000000"
+                    Text {
+                        id:countryItem
+                        text: name
+                        color:  {
+                            if (type=="header" || text==countryName.text) {
+                                return "#69F";
+                            } else {
+                                return "#FFF";
+                            }
+                        }
+                        height:(type=="header")?80:40
+                        font.pixelSize: (type=="header")?30:14
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                    }
+                    MouseArea {
+                        anchors.fill: countryItemWrapper
+                        onPressed: {
+                            if (type!="header") {
+                                countryItemWrapper.color="#ddd"
+                                countryItem.color="#333"
+                            }
+                        }
+                        onReleased: {
+                            if (type!="header") {
+                                countryItemWrapper.color="#00000000"
+                                countryItem.color="#69f"
+                            }
+                        }
+                        onClicked: {
+                            if (type!="header") {
+                                countryName.text=countryItem.text
+                                selectCountry.state="off"
+                                window.selectedCountry=countryItem.text
+                            }
+                        }
+                    }
+                    Hr {
+                    }
                 }
             }
         }

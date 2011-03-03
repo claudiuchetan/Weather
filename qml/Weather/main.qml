@@ -27,6 +27,8 @@ Rectangle {
     property bool modelReady: false
     property int modelData: 0
     property variant forecastData:null
+    property Rectangle popup:popupDialog
+    property string selectedCountry:"";
 
     function switchView(newView) {
         cView=newView;
@@ -62,8 +64,8 @@ Rectangle {
         lModel.reload();
     }
 
-    function addLocation(name) {
-        LocationData.addLocation("Los Angeles", "USA");
+    function addLocation(name,country) {
+        LocationData.addLocation(name,country);
         lModel.reload();
 	}
 
@@ -366,6 +368,11 @@ function getForecastInfo(locID){
                 }
             }
         }
+
+        PopupDialog {
+            id:popupDialog
+        }
+
         Component.onCompleted: {
 //            Init.initDB();
             switchView("Home");

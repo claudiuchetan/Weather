@@ -35,7 +35,8 @@ function addLocation(name, country){
         setDBLocation(name, country, 1, 1, currentTime,"false")
     }
     else{
-        console.log("already exists");
+        window.popup.msg="Location already exists!";
+        window.popup.state="on";
     }
 }
 

@@ -1,6 +1,7 @@
 import QtQuick 1.0
 
 ListModel {
+    ListElement {name: "A"; type: "header"}
     ListElement {name: "Afghanistan"}
     ListElement {name: "Akrotiri"}
     ListElement {name: "Albania"}
@@ -18,6 +19,8 @@ ListModel {
     ListElement {name: "Australia"}
     ListElement {name: "Austria"}
     ListElement {name: "Azerbaijan"}
+
+    ListElement {name: "B"; type: "header"}
     ListElement {name: "Bahamas, The"}
     ListElement {name: "Bahrain"}
     ListElement {name: "Bangladesh"}
@@ -41,6 +44,8 @@ ListModel {
     ListElement {name: "Burkina Faso"}
     ListElement {name: "Burma"}
     ListElement {name: "Burundi"}
+
+    ListElement {name: "C"; type: "header"}
     ListElement {name: "Cambodia"}
     ListElement {name: "Cameroon"}
     ListElement {name: "Canada"}
@@ -65,11 +70,15 @@ ListModel {
     ListElement {name: "Cuba"}
     ListElement {name: "Cyprus"}
     ListElement {name: "Czech Republic"}
+
+    ListElement {name: "D"; type: "header"}
     ListElement {name: "Denmark"}
     ListElement {name: "Dhekelia"}
     ListElement {name: "Djibouti"}
     ListElement {name: "Dominica"}
     ListElement {name: "Dominican Republic"}
+
+    ListElement {name: "E"; type: "header"}
     ListElement {name: "Ecuador"}
     ListElement {name: "Egypt"}
     ListElement {name: "El Salvador"}
@@ -78,6 +87,8 @@ ListModel {
     ListElement {name: "Estonia"}
     ListElement {name: "Ethiopia"}
     ListElement {name: "Europa Island"}
+
+    ListElement {name: "F"; type: "header"}
     ListElement {name: "Falkland Islands (Islas Malvinas)"}
     ListElement {name: "Faroe Islands"}
     ListElement {name: "Fiji"}
@@ -86,6 +97,8 @@ ListModel {
     ListElement {name: "French Guiana"}
     ListElement {name: "French Polynesia"}
     ListElement {name: "French Southern and Antarctic Lands"}
+
+    ListElement {name: "G"; type: "header"}
     ListElement {name: "Gabon"}
     ListElement {name: "Gambia, The"}
     ListElement {name: "Gaza Strip"}
@@ -104,12 +117,16 @@ ListModel {
     ListElement {name: "Guinea"}
     ListElement {name: "Guinea-Bissau"}
     ListElement {name: "Guyana"}
+
+    ListElement {name: "H"; type: "header"}
     ListElement {name: "Haiti"}
     ListElement {name: "Heard Island and McDonald Islands"}
     ListElement {name: "Holy See (Vatican City)"}
     ListElement {name: "Honduras"}
     ListElement {name: "Hong Kong"}
     ListElement {name: "Hungary"}
+
+    ListElement {name: "I"; type: "header"}
     ListElement {name: "Iceland"}
     ListElement {name: "India"}
     ListElement {name: "Indonesia"}
@@ -119,12 +136,16 @@ ListModel {
     ListElement {name: "Isle of Man"}
     ListElement {name: "Israel"}
     ListElement {name: "Italy"}
+
+    ListElement {name: "J"; type: "header"}
     ListElement {name: "Jamaica"}
     ListElement {name: "Jan Mayen"}
     ListElement {name: "Japan"}
     ListElement {name: "Jersey"}
     ListElement {name: "Jordan"}
     ListElement {name: "Juan de Nova Island"}
+
+    ListElement {name: "K"; type: "header"}
     ListElement {name: "Kazakhstan"}
     ListElement {name: "Kenya"}
     ListElement {name: "Kiribati"}
@@ -132,6 +153,8 @@ ListModel {
     ListElement {name: "Korea, South"}
     ListElement {name: "Kuwait"}
     ListElement {name: "Kyrgyzstan"}
+
+    ListElement {name: "L"; type: "header"}
     ListElement {name: "Laos"}
     ListElement {name: "Latvia"}
     ListElement {name: "Lebanon"}
@@ -141,6 +164,8 @@ ListModel {
     ListElement {name: "Liechtenstein"}
     ListElement {name: "Lithuania"}
     ListElement {name: "Luxembourg"}
+
+    ListElement {name: "M"; type: "header"}
     ListElement {name: "Macau"}
     ListElement {name: "Macedonia"}
     ListElement {name: "Madagascar"}
@@ -162,6 +187,8 @@ ListModel {
     ListElement {name: "Montserrat"}
     ListElement {name: "Morocco"}
     ListElement {name: "Mozambique"}
+
+    ListElement {name: "N"; type: "header"}
     ListElement {name: "Namibia"}
     ListElement {name: "Nauru"}
     ListElement {name: "Navassa Island"}
@@ -177,7 +204,11 @@ ListModel {
     ListElement {name: "Norfolk Island"}
     ListElement {name: "Northern Mariana Islands"}
     ListElement {name: "Norway"}
+
+    ListElement {name: "O"; type: "header"}
     ListElement {name: "Oman"}
+
+    ListElement {name: "P"; type: "header"}
     ListElement {name: "Pakistan"}
     ListElement {name: "Palau"}
     ListElement {name: "Panama"}
@@ -190,11 +221,17 @@ ListModel {
     ListElement {name: "Poland"}
     ListElement {name: "Portugal"}
     ListElement {name: "Puerto Rico"}
+
+    ListElement {name: "Q"; type: "header"}
     ListElement {name: "Qatar"}
+
+    ListElement {name: "R"; type: "header"}
     ListElement {name: "Reunion"}
     ListElement {name: "Romania"}
     ListElement {name: "Russia"}
     ListElement {name: "Rwanda"}
+
+    ListElement {name: "S"; type: "header"}
     ListElement {name: "Saint Helena"}
     ListElement {name: "Saint Kitts and Nevis"}
     ListElement {name: "Saint Lucia"}
@@ -225,6 +262,8 @@ ListModel {
     ListElement {name: "Sweden"}
     ListElement {name: "Switzerland"}
     ListElement {name: "Syria"}
+
+    ListElement {name: "T"; type: "header"}
     ListElement {name: "Taiwan"}
     ListElement {name: "Tajikistan"}
     ListElement {name: "Tanzania"}
@@ -240,6 +279,8 @@ ListModel {
     ListElement {name: "Turkmenistan"}
     ListElement {name: "Turks and Caicos Islands"}
     ListElement {name: "Tuvalu"}
+
+    ListElement {name: "U"; type: "header"}
     ListElement {name: "Uganda"}
     ListElement {name: "Ukraine"}
     ListElement {name: "United Arab Emirates"}
@@ -247,15 +288,23 @@ ListModel {
     ListElement {name: "United States"}
     ListElement {name: "Uruguay"}
     ListElement {name: "Uzbekistan"}
+
+    ListElement {name: "V"; type: "header"}
     ListElement {name: "Vanuatu"}
     ListElement {name: "Venezuela"}
     ListElement {name: "Vietnam"}
     ListElement {name: "Virgin Islands"}
+
+    ListElement {name: "W"; type: "header"}
     ListElement {name: "Wake Island"}
     ListElement {name: "Wallis and Futuna"}
     ListElement {name: "West Bank"}
     ListElement {name: "Western Sahara"}
+
+    ListElement {name: "Y"; type: "header"}
     ListElement {name: "Yemen"}
+
+    ListElement {name: "Z"; type: "header"}
     ListElement {name: "Zambia"}
     ListElement {name: "Zimbabwe"}
 }
