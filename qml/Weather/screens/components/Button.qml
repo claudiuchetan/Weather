@@ -4,7 +4,7 @@ Rectangle {
     property string icon:""
     property int customWidth: 47
     property int customHeight: 65
-    property MouseArea mouseArea:click
+    signal clicked
     width: customWidth
     height: customHeight
     smooth: true
@@ -36,7 +36,7 @@ Rectangle {
             image.scale=1.0
         }
         onClicked: {
-            console.log("click");
+            parent.clicked();
         }
     }
 }

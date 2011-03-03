@@ -221,11 +221,8 @@ function getForecastInfo(locID){
                 anchors.leftMargin: 10
                 customHeight: 24
                 customWidth: 24
-                Connections {
-                    target: buttonSettings.mouseArea
-                    onClicked : {
-                        switchView("Settings");
-                    }
+                onClicked: {
+                    switchView("Settings");
                 }
             }
             Button {
@@ -235,11 +232,8 @@ function getForecastInfo(locID){
                 anchors.horizontalCenter: parent.horizontalCenter
                 customHeight: 24
                 customWidth: 24
-                Connections {
-                    target: buttonRefresh.mouseArea
-                    onClicked : {
-                        refresh();
-                    }
+                onClicked: {
+                    refresh();
                 }
             }
             Button {
@@ -250,12 +244,8 @@ function getForecastInfo(locID){
                 anchors.verticalCenter: parent.verticalCenter
                 customHeight: 24
                 customWidth: 24
-                Connections {
-                    target: buttonLogout.mouseArea
-                    onClicked : {
-//                        cleanOnExit();
-                        Qt.quit();
-                    }
+                onClicked: {
+                    Qt.quit();
                 }
             }
         }
@@ -289,11 +279,8 @@ function getForecastInfo(locID){
                 customHeight: 72
                 anchors.top: parent.top
                 anchors.topMargin: -7
-                Connections {
-                    target: buttonHome.mouseArea
-                    onClicked : {
-                        switchView("Home");
-                    }
+                onClicked: {
+                    switchView("Home");
                 }
             }
             Button {
@@ -301,11 +288,8 @@ function getForecastInfo(locID){
                 icon:"forecast"
                 anchors.top: parent.top
                 customWidth: 45
-                Connections {
-                    target: buttonForecast.mouseArea
-                    onClicked : {
-                        switchView("Forecast");
-                    }
+                onClicked: {
+                    switchView("Forecast");
                 }
             }
             Button {
@@ -313,22 +297,16 @@ function getForecastInfo(locID){
                 icon:"graphics"
                 customWidth: 42
                 anchors.top: parent.top
-                Connections {
-                    target: buttonCharts.mouseArea
-                    onClicked : {
-                        switchView("Analytics");
-                    }
+                onClicked: {
+                    switchView("Analytics");
                 }
             }
             Button {
                 id:buttonMap
                 icon:"map"
                 anchors.top: parent.top
-                Connections {
-                    target: buttonMap.mouseArea
-                    onClicked : {
-                        switchView("Location");
-                    }
+                onClicked: {
+                    switchView("Location");
                 }
             }
             states: [
