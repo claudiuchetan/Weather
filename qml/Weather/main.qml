@@ -15,6 +15,7 @@ Rectangle {
     property string cBackgroundDay:backDayPortrait
     property string cBackgroundNight:backNightPortrait
     property bool isLandscape: (body.width>450)
+    property variant oviObject: null
     color:"#333"
 
     function switchView(newView) {
