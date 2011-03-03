@@ -12,7 +12,10 @@ QML_IMPORT_PATH =
 # Needs to be defined for Symbian
 DEFINES += NETWORKACCESS
 
-symbian:TARGET.UID3 = 0xE73BCAB3
+symbian: {
+TARGET.UID3 = 0xE73BCAB3
+TARGET.CAPABILITY += Location
+}
 
 # Define QMLJSDEBUGGER to allow debugging of QML in debug builds
 # (This might significantly increase build time)
@@ -22,8 +25,7 @@ symbian:TARGET.UID3 = 0xE73BCAB3
 # the following lines and add the respective components to the 
 # MOBILITY variable. 
  CONFIG += mobility
- MOBILITY += sensors
- MOBILITY += location
+ MOBILITY = location sensors
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp
