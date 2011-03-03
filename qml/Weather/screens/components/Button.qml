@@ -4,18 +4,16 @@ Rectangle {
     property string icon:""
     property int customWidth: 47
     property int customHeight: 65
-    property MouseArea mouseArea:click
+    signal clicked
     width: customWidth
     height: customHeight
-    clip: true
     smooth: true
     color:"#00000000"
     Image {
         id: image
-        x: 2
-        y: 0
         fillMode: Image.TileHorizontally
         height: parent.height
+        width:parent.width
         source:"../../images/"+icon+".png"
         smooth: true
         Behavior on scale {
@@ -27,7 +25,10 @@ Rectangle {
     }
     MouseArea {
         id: click
-        anchors.fill: parent
+        width: parent.width+20
+        height: parent.height+20
+        x:-10
+        y:-10
         onPressed: {
             image.scale=0.8
         }
@@ -35,7 +36,7 @@ Rectangle {
             image.scale=1.0
         }
         onClicked: {
-            console.log("click");
+            parent.clicked();
         }
     }
 }

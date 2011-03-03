@@ -2,7 +2,12 @@ import QtQuick 1.0
 import QtMobility.sensors  1.1
 import "engine/utils.js" as Utils
 import "engine/init.js" as Init
+import "screens/homeBehaviour.js" as HomeBehaviour
+import "engine/LocationData.js" as LocationData
+import "engine/Database.js" as Bla
 import "screens"
+import "engine"
+import"engine/WeatherData.js" as Test
 import "screens/components"
 
 Rectangle {
@@ -15,8 +20,15 @@ Rectangle {
     property string cBackgroundDay:backDayPortrait
     property string cBackgroundNight:backNightPortrait
     property bool isLandscape: (body.width>450)
-    property variant oviObject: null
+    property ListModel locationsModel: lModel
+    property string currentLocation: "Iasi"
     color:"#333"
+    property int gLocationID:1
+    property bool modelReady: false
+    property int modelData: 0
+    property variant forecastData:null
+    property Rectangle popup:popupDialog
+    property string selectedCountry:"";
 
     function switchView(newView) {
         cView=newView;
@@ -47,16 +59,90 @@ Rectangle {
         Init.cleanDB();
     }
 
+    function removeLocation(name) {
+        LocationData.deleteLocationbyName(name);
+        lModel.reload();
+    }
+
+    function addLocation(name,country) {
+        LocationData.addLocation(name,country);
+        lModel.reload();
+	}
+
+    /*returns the current weather for a location ID
+      the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
+    */
+
+    function getCurrentInfo(locID){
+        var savedCurrent="";
+        var savedData=Test.verifyLastReq(locID,"current");
+        //if weather data for locID has not been saved in DB in the last hour
+        if (savedData == "")
+        {
+            //get the weather data from server
+            var queryString=Test.createQueryString(locID,"current");
+            test1.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+            console.log(test1.source);
+            test1.reload();
+            //get the weather data from DB
+            savedCurrent=Test.getWeatherRow(window.modelData);
+        }
+        else{
+            savedCurrent=savedData;
+        }
+    return savedCurrent;
+    }
+
+    /*returns the forecast for the interval today -> today+4days
+      the answer includes 5 objects, each having the following fields:date,temp_min,temp_max,precipitation,wind_speed,weather_desc
+    */
+function getForecastInfo(locID){
+        var savedForecast=[];
+        var alreadyData=Test.verifyLastReq(locID,"forecast");
+        if (alreadyData.length<1)
+        {
+            var queryString=Test.createQueryString(locID,"forecast");
+            fModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+            console.log(fModel.source);
+            fModel.reload();
+            var weatherIDs=window.forecastData;
+            //foreach id returned by the model, get the row from database
+            for (var i=0;i<weatherIDs.length; i++){
+                savedForecast=Test.getWeatherRow(weatherIDs[i]);
+            }
+        }
+        else{
+           savedForecast=alreadyData;
+        }
+        return savedForecast;
+    }
+
+    ListModel  {
+        function reload() {
+            lModel.clear();
+            var locations=LocationData.listLocations();
+            var j=0;
+            for (var i=0;i<locations.length;i++) {
+                if (j>=HomeBehaviour.weatherDev.length) j=0;
+                locationsModel.append({
+                                 "degrees": HomeBehaviour.weatherDev[j].degrees,
+                                 "state": HomeBehaviour.weatherDev[j].state,
+                                 "name": locations[i].name,
+                                 "icon":HomeBehaviour.weatherDev[j].icon});
+                j++;
+            }
+        }
+        id: lModel
+        Component.onCompleted:{
+            reload();
+        }
+    }
 
     Rectangle {
         id:body
         color: "#00000000"
         width:parent.width
         height: parent.height
-
-        //Add the background
-//        Background {
-//        }
 
         Image {
             id:background
@@ -118,26 +204,51 @@ Rectangle {
         }
 
         Rectangle {
-            width:isLandscape?32:body.width
-            height:isLandscape?body.height:32
-            border.width: 1
+            id:secondaryMenu
+            width:body.width
+            height:50
+            opacity: 0.5
             color:"#00000000"
+            z:1000
             anchors.margins: {
                 top: 9
                 bottom: 9
                 left: 9
                 right: 9
             }
-            Flow {
-                flow: isLandscape?Flow.TopToBottom:Flow.LeftToRight
-                Image {
-                    source: "images/settings.png"
+            Button {
+                id:buttonSettings
+                icon:"settings"
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 10
+                customHeight: 24
+                customWidth: 24
+                onClicked: {
+                    switchView("Settings");
                 }
-                Image {
-                    source: "images/refresh.png"
+            }
+            Button {
+                id:buttonRefresh
+                icon:"refresh"
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                customHeight: 24
+                customWidth: 24
+                onClicked: {
+                    refresh();
                 }
-                Image {
-                    source: "images/logout.png"
+            }
+            Button {
+                id:buttonLogout
+                icon:"logout"
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                customHeight: 24
+                customWidth: 24
+                onClicked: {
+                    Qt.quit();
                 }
             }
         }
@@ -167,45 +278,38 @@ Rectangle {
             Button {
                 id:buttonHome
                 icon:"home"
+                customWidth: 53
+                customHeight: 72
                 anchors.top: parent.top
-                Connections {
-                    target: buttonHome.mouseArea
-                    onClicked : {
-                        switchView("Home");
-                    }
+                anchors.topMargin: -7
+                onClicked: {
+                    switchView("Home");
                 }
             }
             Button {
                 id:buttonForecast
                 icon:"forecast"
                 anchors.top: parent.top
-                Connections {
-                    target: buttonForecast.mouseArea
-                    onClicked : {
-                        switchView("Forecast");
-                    }
+                customWidth: 45
+                onClicked: {
+                    switchView("Forecast");
                 }
             }
             Button {
                 id:buttonCharts
                 icon:"graphics"
+                customWidth: 42
                 anchors.top: parent.top
-                Connections {
-                    target: buttonCharts.mouseArea
-                    onClicked : {
-                        switchView("Analytics");
-                    }
+                onClicked: {
+                    switchView("Analytics");
                 }
             }
             Button {
                 id:buttonMap
                 icon:"map"
                 anchors.top: parent.top
-                Connections {
-                    target: buttonMap.mouseArea
-                    onClicked : {
-                        switchView("Location");
-                    }
+                onClicked: {
+                    switchView("Location");
                 }
             }
             states: [
@@ -228,27 +332,6 @@ Rectangle {
                     }
                 }
             ]
-        }
-
-
-
-        /*
-      The secondary options menu; always appears as a bar at the bottom
-      !need to add icon so that the slide action is more clear to the user
-      */
-        Drawer {
-            id:drawer
-            z:99
-            Connections {
-                target:  drawer.flick
-                onContentYChanged: {
-                    if (drawer.flick.contentY>10) {
-                        mainMenu.state="off";
-                    } else {
-                        mainMenu.state="on";
-                    }
-                }
-            }
         }
 
         /*
@@ -285,9 +368,20 @@ Rectangle {
                 }
             }
         }
+
+        PopupDialog {
+            id:popupDialog
+        }
+
         Component.onCompleted: {
-            Init.initDB();
+//            Init.initDB();
             switchView("Home");
+        }
+	CurrentWeatherModel{
+            id:test1
+        }
+        ForecastModel{
+            id:fModel
         }
     }
 }

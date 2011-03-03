@@ -1,59 +1,27 @@
 import QtQuick 1.0
-import "../screens/components"
+import "components"
 
-Rectangle {
-    color:"#69F"
-    Text {
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Forecast"
-    }
+Item {
+    y:30
 
-    XmlListModel {
-        id:forecastModel
-        source:"http://www.worldweatheronline.com/feed/weather.ashx?q=Cluj,Romania&format=xml&num_of_days=2&key=3d571c8060200122110802"
-        query: "/data/current_condition"
-        XmlRole { name: "temperature"; query: "temp_C/number()" }
-        XmlRole { name: "weather"; query: "weatherDesc/string()" }
-        XmlRole { name: "windspeed"; query: "windspeedKmph/number()" }
-        XmlRole { name: "precipitation"; query: "precipMM/number()" }
-        XmlRole { name: "humidity"; query: "humidity/number()" }
-        XmlRole { name: "visibility"; query: "visibility/number()" }
-        XmlRole { name: "pressure"; query: "pressure/number()" }
-        XmlRole { name: "cloudcover"; query: "cloudcover/number()" }
-
-        onStatusChanged: {
-            if (status == XmlListModel.Ready) {
-                console.log("ok "+forecastModel.get(0).temperature);
+    ListView {
+        id: view
+        anchors { fill: parent; bottomMargin: 30 }
+        model:  locationsModel;
+        delegate:
+            Row{
+            ForecastWidget {
+                width:body.width
+                height:body.height
+                locationName: name
+                z:10
             }
         }
-    }
-
-    Loader {
-        width:360
-        height:400
-        sourceComponent: forecastModel.status===XmlListModel.Ready?listing:loading;
-    }
-
-    Component {
-        id: loading
-        Item {
-            LoadingIndicator {
-                width: 50
-                height: 50
-                anchors.centerIn: parent
-            }
-        }
-    }
-    Component {
-        id:listing
-        ListView {
-            model: forecastModel
-            width: 180; height: 300
-            delegate: Text { text:  temperature + ": " + weather }
-        }
-    }
-
-    Component.onCompleted:{
-        console.log("-> Forecast loaded");
+        preferredHighlightBegin: 0;
+        preferredHighlightEnd: 0
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        orientation: ListView.Horizontal
+        snapMode: ListView.SnapToItem
+        flickDeceleration: 2000
     }
 }

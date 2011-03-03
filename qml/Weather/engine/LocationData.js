@@ -10,13 +10,8 @@ function getCurrentLocation()
 
 //list all locations
 function listLocations(){
-    var i=1;
-    var numLocations=getNumRows("Location");
     var answer=[];
-    for (i=1;i<=numLocations;i++){
-        answer[i-1]=getDataRow(i,"Location");
-
-    }
+    answer = getTableData("Location");
     return answer;
 }
 
@@ -32,9 +27,17 @@ function setCurrentLocation(locationID){
 
 //add location in DB witha  name and country
 function addLocation(name, country){
-    var currentTime = new Date();
-    //longitude and latitude temporarly set as 1 until getLocation is implemented
-    setDBLocation(name, country, 1, 1, currentTime,"false")
+    var locID=getDBLocationID(name,country);
+    //if the location with the same name doesn't alerady exist in DB
+    if (locID==0){
+        var currentTime = new Date();
+        //longitude and latitude temporarly set as 1 until getLocation is implemented
+        setDBLocation(name, country, 1, 1, currentTime,"false")
+    }
+    else{
+        window.popup.msg="Location already exists!";
+        window.popup.state="on";
+    }
 }
 
 function getLocationID(name,country)
@@ -43,9 +46,9 @@ function getLocationID(name,country)
     return answer;
 }
 
-function deleteLocation(id){
+function deleteLocationbyID(id){
     deleteDataRow(id,"Location");
-    var answer=getWeatherID(id);
+    /*var answer=getWeatherID(id);
     var i=1;
     var numIds=answer.length;
     if (numIds>0){
@@ -53,22 +56,16 @@ function deleteLocation(id){
         deleteDataRow(answer[i],"Weather_Data");
         }
     deleteDataRow(id,"Location_Weather");
-    }
+    }*/
 }
 
-// read weather data for location id and type:current, forecast
-function createQueryString(locationID,type){
-    var numDays=0;
-    var key="3d571c8060200122110802";
-    var answer=getDataRow(locationID,"Location");
-    var city=answer.name;
-    var country=answer.country;
-    if (type=="current"){
-        numDays=1;
-    }
-    else{
-        numDays=5;
-    }
-    var query=city+","+country+"&format=xml&num_of_days="+numDays+"&key="+key;
-    return query;
+/*function deleteLocationbyName(name,country){
+    var answer=deleteDBLocation(name,country);
+    return answer;
+}*/
+
+function deleteLocationbyName(name){
+    var answer=deleteDBLocation(name);
+    return answer;
 }
+
