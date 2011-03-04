@@ -8,7 +8,7 @@ import "components"
 WebView {
     url: "Map.html"
     preferredWidth: 500
-    preferredHeight: 600
+    preferredHeight: 580
     smooth: false
     javaScriptWindowObjects: QtObject {
             WebView.windowObjectName: "qml"
