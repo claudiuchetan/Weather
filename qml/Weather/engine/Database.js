@@ -1,4 +1,4 @@
-
+initialize();
 function getDatabase() {
     return openDatabaseSync("WTFTeste1", "1.0", "StorageDatabase for weather application", 100000);
 }
@@ -9,7 +9,7 @@ function initialize() {
     db.transaction( function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS Location(id INTEGER UNIQUE PRIMARY KEY, name TEXT,country TEXT, longitudine TEXT, latitude TEXT, date_added TIMESTAMP, current BOOL    )');
         tx.executeSql('CREATE TABLE IF NOT EXISTS Location_Weather(idWeather_Data INTEGER UNIQUE, idLocation INTEGER, type STRING )');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS Weather_Data(id INTEGER UNIQUE PRIMARY KEY, date DATETIME,temperature FLOAT, temp_min FLOAT, temp_max FLOAT, precipitation FLOAT, wind_speed FLOAT, humidity FLOAT, pressure FLOAT, weather_desc TEXT, date_forecast )');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Weather_Data(id INTEGER UNIQUE PRIMARY KEY, date DATETIME,temperature FLOAT, temp_min FLOAT, temp_max FLOAT, precipitation FLOAT, wind_speed FLOAT, humidity FLOAT, pressure FLOAT, weather_desc TEXT, date_forecast, code INTEGER, image_url TEXT )');
                });
 }
 
@@ -45,13 +45,13 @@ return res;
 }
 
 /* Save weather data to DB */
-function setDBWeather(date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast) {
+function setDBWeather(date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast,code,image_url) {
     var db = getDatabase();
     var res = "";
     var id=0;
     id=getMaxID("Weather_Data")+1;
     db.transaction(function(tx) {
-        var rs = tx.executeSql('INSERT INTO Weather_Data VALUES (?,?,?,?,?,?,?,?,?,?,?);', [id,date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast])
+        var rs = tx.executeSql('INSERT INTO Weather_Data VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);', [id,date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast,code,image_url])
         if (rs.rowsAffected > 0) {
             res = id;
         } else {

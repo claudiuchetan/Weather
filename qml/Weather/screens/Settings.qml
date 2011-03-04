@@ -43,7 +43,7 @@ Rectangle {
         font.pixelSize: 18
         font.capitalization: Font.AllUppercase
         color:(window.selectedCountry=="")?"#bbb":"#333"
-        text:  "Select Country"
+        text:  (window.selectedCountry=="")?"Select Country":window.selectedCountry
         clip:true
         anchors.verticalCenter: countryInput.verticalCenter
         anchors.left: countryInput.left
@@ -142,7 +142,6 @@ Rectangle {
         onClicked : {
             if (window.selectedCountry!="") {
                 if (input.text!="") {
-
                     window.addLocation(input.text.toLowerCase(),window.selectedCountry.toLowerCase());
                     input.text=""
                 } else {

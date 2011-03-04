@@ -1,8 +1,7 @@
 import QtQuick 1.0
 import QtMobility.sensors  1.1
-import "engine/utils.js" as Utils
 import "engine/init.js" as Init
-import "screens/homeBehaviour.js" as HomeBehaviour
+import "screens/Logic.js" as Logic
 import "engine/LocationData.js" as LocationData
 import "engine/Database.js" as Bla
 import "screens"
@@ -22,13 +21,22 @@ Rectangle {
     property string cBackgroundNight:backNightPortrait
     property bool isLandscape: (body.width>450)
     property ListModel locationsModel: lModel
-    property string currentLocation: "Iasi"
+    property ListModel locationsForecastModel: fModel
+    property string currentLocation: ""
     property int gLocationID:0
     property bool modelReady: false
     property int modelData: 0
     property variant forecastData:null
     property Rectangle popup:popupDialog
     property string selectedCountry:""
+
+    function getLogic() {
+        return Logic;
+    }
+
+    function refresh() {
+        weatherTimer.start();
+    }
 
     function switchView(newView) {
         cView=newView;
@@ -73,27 +81,30 @@ Rectangle {
     /*returns the current weather for a location ID
       the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
     */
-
     function getCurrentInfo(locID){
-        var savedCurrent="";
-        var savedData=WeatherData.verifyLastReq(locID,"current");
-        console.log("cweather for: "+locID);
-        //if weather data for locID has not been saved in DB in the last hour
-        if (savedData == "")
-        {
-            //get the weather data from server
-            var queryString=WeatherData.createQueryString(locID,"current");
-            weatherModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
-            console.log(weatherModel.source);
-            weatherModel.reload();
-            //get the weather data from DB
-            savedCurrent=WeatherData.getWeatherRow(window.modelData);
+        console.log("Reading online weather for: "+locID);
+        //get the weather data from server
+        var queryString=WeatherData.createQueryString(locID,"current");
+        weatherModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+        weatherModel.reload();
+        //get the weather data from DB
+        return WeatherData.getWeatherRow(window.modelData);
+    }
+
+    function getCurrentInfoCached(locID){
+        console.log("Reading cached data for location "+locID);
+        return WeatherData.verifyLastReq(locID,"current");
+    }
+
+    function getCurrentWeatherFromQueue() {
+        if (Logic.currentWeatherQueue.length>0) {
+            var locationID=Logic.currentWeatherQueue.pop();
+            gLocationID=locationID;
+            var data=getCurrentInfo(locationID);
+//            if (data!="") {
+//                weatherTimer.start();
+//            }
         }
-        else{
-            console.log("already in DB "+locID);
-            savedCurrent=savedData;
-        }
-        return savedCurrent;
     }
 
     /*returns the forecast for the interval today -> today+4days
@@ -101,58 +112,56 @@ Rectangle {
     */
     function getForecastInfo(locID){
         var savedForecast=[];
-        var alreadyData=WeatherData.verifyLastReq(locID,"forecast");
-        if (alreadyData.length<1)
-        {
-            var queryString=WeatherData.createQueryString(locID,"forecast");
-            forecastModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
-            console.log(forecastModel.source);
-            forecastModel.reload();
-            var weatherIDs=window.forecastData;
-            //foreach id returned by the model, get the row from database
+        var queryString=WeatherData.createQueryString(locID,"forecast");
+        forecastModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+        forecastModel.reload();
+        var weatherIDs=window.forecastData;
+        //foreach id returned by the model, get the row from database
+        if (weatherIDs) {
             for (var i=0;i<weatherIDs.length; i++){
                 savedForecast=WeatherData.getWeatherRow(weatherIDs[i]);
             }
         }
-        else{
-            savedForecast=alreadyData;
-        }
         return savedForecast;
     }
 
-    function getWeatherFromQueue() {
-        console.log("queue has: "+HomeBehaviour.weatherQueue.length);
-        if (HomeBehaviour.weatherQueue.length>0) {
-            var locationID=HomeBehaviour.weatherQueue.pop();
-            console.log("getting queued weather for "+locationID);
+    function getForecastInfoCached(locID){
+        return WeatherData.verifyLastReq(locID,"forecast");
+    }
+
+    function getForecastWeatherFromQueue() {
+        if (Logic.forecastWeatherQueue.length>0) {
+            var locationID=Logic.forecastWeatherQueue.pop();
             gLocationID=locationID;
-            getCurrentInfo(locationID);
+            var data=getForecastInfo(locationID);
+            if (data!="") {
+                weatherTimer.start();
+            }
+        }
+    }
+
+    Timer {
+        id:weatherTimer
+        interval:2000
+        onTriggered: {
+            lModel.reload();
         }
     }
 
     ListModel  {
         id: lModel
         function reload() {
-            lModel.clear();
-            var locations=LocationData.listLocations();
-            var j=0;
-            for (var i=0;i<locations.length;i++) {
-//                getCurrentInfo(locations[i].id);
-                HomeBehaviour.weatherQueue.push(locations[i].id);
-                if (j>=HomeBehaviour.weatherDev.length) j=0;
-                locationsModel.append({
-                                      "degrees": HomeBehaviour.weatherDev[j].degrees,
-                                      "state": HomeBehaviour.weatherDev[j].state,
-                                      "name": locations[i].name,
-                                      "id": locations[i].id,
-                                      "icon":HomeBehaviour.weatherDev[j].icon});
-                j++;
-            }
-            console.log("there are "+HomeBehaviour.weatherQueue.length+" id-s in the queue");
-            getWeatherFromQueue();
+            Logic.reloadCurrentWeatherModel(lModel);
         }
         Component.onCompleted:{
             reload();
+        }
+    }
+
+    ListModel  {
+        id: fModel
+        function reload() {
+            Logic.reloadForecastWeatherModel(fModel);
         }
     }
 

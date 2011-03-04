@@ -18,17 +18,16 @@ function createQueryString(locationID,type){
     return query;
 }
 
-function saveCurrentWeather(type,locID,temp,temp_min,temp_max,precip,wind,humidity,pressure,desc,date_forecast){
+function saveCurrentWeather(type,locID,temp,temp_min,temp_max,precip,wind,humidity,pressure,desc,date_forecast,code,image_url){
     //var usedTime=new Date();
     var cTime = new Date();
     var usedDate=formatTime(cTime);
     if (type=="current"){
-        console.log("SAVE");
-        var weatherID=setDBWeather(cTime.getTime(),temp,temp_min,temp_max,precip,wind,humidity,pressure,desc,usedDate);
+        var weatherID=setDBWeather(cTime.getTime(),temp,temp_min,temp_max,precip,wind,humidity,pressure,desc,usedDate,code,image_url);
         setDBLocationWeather(locID,weatherID, "current");
     }
     else{
-        var weatherID=setDBWeather(cTime.getTime(),temp,temp_min,temp_max,precip,wind,humidity,pressure,desc,date_forecast);
+        var weatherID=setDBWeather(cTime.getTime(),temp,temp_min,temp_max,precip,wind,humidity,pressure,desc,date_forecast,code,image_url);
         setDBLocationWeather(locID,weatherID, "forecast");
     }
     return weatherID;
@@ -72,17 +71,12 @@ function verifyLastReq(locID,type){
             }
         }
     }
-if (type=="current")
-    return res1
-else
-    return res2;
-}
+    if (type=="current")
+        return res1
+    else
+        return res2;
+    }
 
 function getWeatherRow(id){
-var answer="";
-answer=getDataRow(id,"Weather_Data");
-return answer;
+    return getDataRow(id,"Weather_Data");
 }
-
-
-

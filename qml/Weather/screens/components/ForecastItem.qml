@@ -4,12 +4,14 @@ Rectangle {
     id: rectangle1
     property string pDay: "Wednesday"
     property string pWeather: "snow"
-    property int pIconWidth: 47
-    property int pIconHeight: 46
-    property int pTempMax: 25
-    property int pTempMin: 18
-    property int pWindSpeed: 13
-    property int pPrecipitationChance: 14
+    property variant pIconWidth: 47
+    property variant pIconHeight: 46
+    property variant pTempMax: 25
+    property variant pTempMin: 18
+    property variant pWindSpeed: 13
+    property variant pPrecipitationChance: 14
+    property string pIconSrc:""
+
 
     height:93
     width:360
@@ -52,7 +54,7 @@ Rectangle {
         border.width:0
         Image {
             id:icon
-            source:"../../images/clear_small.png"
+            source: (pIconSrc=="")?"":("../../images/small_icons/"+pIconSrc)
             width:pIconWidth
             height:pIconHeight
             anchors.verticalCenter: parent.verticalCenter
@@ -72,12 +74,24 @@ Rectangle {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         ForecastCell {
+            pValue:pTempMax
+            pName:  "max"
+            pUnit:"\u00B0C"
         }
         ForecastCell {
+            pValue:pTempMin
+            pName:  "min"
+            pUnit:"\u00B0C"
         }
         ForecastCell {
+            pValue:pWindSpeed
+            pName:  "wind"
+            pUnit:"km/h"
         }
         ForecastCell {
+            pValue:pPrecipitationChance
+            pName:  "rain"
+            pUnit:"%"
             pBullet:false
         }
     }

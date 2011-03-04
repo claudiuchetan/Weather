@@ -29,6 +29,7 @@ Row {
         anchors.top: parent.top
         customWidth: 45
         onClicked: {
+            window.locationsForecastModel.reload();
             switchView("Forecast");
         }
     }

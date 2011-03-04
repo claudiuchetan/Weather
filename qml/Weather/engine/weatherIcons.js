@@ -1,4 +1,4 @@
-var weatherIcon=[
+var weatherIcons=[
     {
         name: "clear",
         width:161,

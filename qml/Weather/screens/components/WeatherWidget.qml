@@ -2,14 +2,11 @@ import QtQuick 1.0
 
 Flow {
     property string locationName: "nowhere"
-    property string weatherState: "clear"
+    property string weatherState: "undefined"
     property string temperature: "-13"
     property string iconSrc: "clear.png"
     property int iconWidth: 100
     property int iconHeight: 100
-//    property bool isLandscape: (body.width>450)
-
-    //    color: "#00000000"
     clip: true
     FontLoader {
         id:widgetFont
@@ -27,7 +24,14 @@ Flow {
             fillMode: Image.Tile
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            source: "../../images/"+iconSrc
+            source: (iconSrc=="")?"":("../../images/"+iconSrc)
+        }
+        Loader {
+            width:100
+            height:100
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            source:(weatherState=="")?"LoadingIndicator.qml":""
         }
     }
     Rectangle {
@@ -36,39 +40,16 @@ Flow {
         height:250
         color: "#00000000"
         Text {
-            id:locationShadow
-            text: locationName
-            anchors.top:location.top
-            anchors.topMargin: 1
-            anchors.left: location.left
-            anchors.leftMargin: 2
-            font.family: widgetFont.name
-            font.pixelSize: location.font.pixelSize
-            color:"#FFF"
-        }
-        Text {
             id:location
             text: locationName
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: isLandscape?parent.verticalCenter:parent.top
-//            anchors.horizontalCenterOffset: isLandscape?40:0
             anchors.verticalCenterOffset: isLandscape?-40:-30
             font.family: widgetFont.name
             font.pixelSize: 30
-//            y:isLandscape?70:-55
+            style: Text.Raised
+            styleColor: "#eee"
             color:"#3a3a3a"
-        }
-        Text {
-            id:temperatureShadow
-            text: temperature
-            smooth: true
-            anchors.top:temp.top
-            anchors.topMargin: 1
-            anchors.left: temp.left
-            anchors.leftMargin: 2
-            font.family: widgetFont.name
-            font.pixelSize: temp.font.pixelSize
-            color:"#FFF"
         }
         Text {
             id:temp
@@ -80,6 +61,21 @@ Flow {
             font.pixelSize: 80
             anchors.topMargin: -40
             color:"#3a3a3a"
+            style: Text.Raised
+            styleColor: "#eee"
+        }
+        Text {
+            id:state
+            text: weatherState
+            smooth: true
+            anchors.horizontalCenter: temp.horizontalCenter
+            anchors.top:temp.bottom
+            font.family: widgetFont.name
+            font.pixelSize: 20
+            anchors.topMargin: -40
+            color:"#888"
+            style: Text.Raised
+            styleColor: "#eee"
         }
     }
 }

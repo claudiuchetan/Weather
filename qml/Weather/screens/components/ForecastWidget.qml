@@ -2,6 +2,7 @@ import QtQuick 1.0
 
 Rectangle {
     property string locationName: "nowhere"
+    property variant forecast: "undefined"
     color:"#00000000"
     clip: true
     FontLoader {
@@ -25,11 +26,29 @@ Rectangle {
         id:hr
         anchors.top: location.bottom
     }
-    Column {
-        anchors.top: hr.bottom
-        Repeater {
-            model:5
-            ForecastItem {}
+    ListView {
+        y:60
+        Column {
+            Repeater {
+                model:forecast
+                ForecastItem {
+                    //date,temp_min,temp_max,precipitation,wind_speed,weather_desc
+                    pDay:window.getLogic().formatDate(date_forecast);
+                    pTempMin:temp_min
+                    pTempMax: temp_max
+                    pPrecipitationChance: precipitation
+                    pWindSpeed: wind_speed
+                    pWeather: weather_desc
+                    pIconSrc: window.getLogic().getIcon(code).src
+                }
+            }
         }
+    }
+    Loader {
+        width: 100
+        height:100
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        source:(forecast=="undefined")?"LoadingIndicator.qml":""
     }
 }

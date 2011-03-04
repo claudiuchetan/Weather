@@ -32,7 +32,7 @@ import QtQuick 1.0
             customHeight: 24
             customWidth: 24
             onClicked: {
-                refresh();
+                window.refresh();
             }
         }
         Button {

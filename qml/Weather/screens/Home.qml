@@ -14,11 +14,11 @@ Item {
                 width:body.width
                 height:body.height
                 locationName: name
-                temperature: degrees+"\u00B0C"
-                weatherState: state
-                iconSrc: icon.src
-                iconWidth: icon.width
-                iconHeight: icon.height
+                temperature: (degrees=="")?"":(degrees+"\u00B0C")
+                weatherState: description
+                iconSrc: (icon=="")?"":icon.src
+                iconWidth: (icon=="")?0:icon.width
+                iconHeight: (icon=="")?0:icon.height
                 z:10
             }
         }

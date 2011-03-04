@@ -7,13 +7,14 @@ Item {
     ListView {
         id: view
         anchors { fill: parent; bottomMargin: 30 }
-        model:  locationsModel;
+        model:  locationsForecastModel;
         delegate:
             Row{
             ForecastWidget {
                 width:body.width
                 height:body.height
                 locationName: name
+                forecast: weatherData;
                 z:10
             }
         }

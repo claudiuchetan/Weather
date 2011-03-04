@@ -1,13 +1,9 @@
 import QtQuick 1.0
+import QtWebKit 1.0
 
-Rectangle {
-    color:"#F69"
-    Text {
-        anchors.fill: parent
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Analytics"
-    }
-    Component.onCompleted:{
-        console.log("-> Analytics loaded");
-    }
+WebView {
+    url: "http://www.worldweatheronline.com/feed/weather.ashx?q=paris,france&format=xml&num_of_days=1&key=3d571c8060200122110802"
+    preferredWidth: 500
+    preferredHeight: 640
+    smooth: false
 }

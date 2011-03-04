@@ -13,6 +13,8 @@ XmlListModel {
     XmlRole { name: "winddirection"; query: "winddirection/string()" }
     XmlRole { name: "weatherDesc"; query: "weatherDesc/string()" }
     XmlRole { name: "precipitation"; query: "precipMM/number()" }
+    XmlRole { name: "code"; query: "weatherCode/number()" }
+    XmlRole { name: "image"; query: "weatherIconUrl/string()" }
 
     onStatusChanged: {
         if (status == XmlListModel.Ready) {
@@ -22,15 +24,16 @@ XmlListModel {
                 for (var i=0;i<itemsNo;i++) {
                     var forecastData=forecastModel.get(i);
                     var wID=0;
-                    wID=WInfo.saveCurrentWeather("forecast",gLocationID,"",forecastData.tempMin,forecastData.tempMax,forecastData.precipitation,forecastData.windspeed,"","",forecastData.weatherDesc,forecastData.date);
+                    wID=WInfo.saveCurrentWeather("forecast",gLocationID,"",forecastData.tempMin,forecastData.tempMax,forecastData.precipitation,forecastData.windspeed,"","",forecastData.weatherDesc,forecastData.date,forecastData.code,forecastData.image);
                     wIDs=wID;
-                    }
+                }
             window.modelReady=true;
             var temp = window.forecastData;
             temp=wIDs;
             //return all the ids in Weather_Data which were saved in DB
             window.forecastData=temp;
             }
+            window.getForecastWeatherFromQueue();
         }
     }
 }
