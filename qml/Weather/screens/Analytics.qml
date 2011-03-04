@@ -8,6 +8,11 @@ Rectangle {
         text: "Analytics"
     }
     Component.onCompleted:{
-        console.log("-> Analytics loaded");
+        //console.log("-> Analytics loaded");
+        gps.getCoordinates();
+        console.log("Analytics LAT:"+window.myLatitude);
+        console.log("Analytics LON:"+window.myLongitude);
+        window.getReverseGeoInfo(window.myLatitude,window.myLongitude);
+
     }
 }

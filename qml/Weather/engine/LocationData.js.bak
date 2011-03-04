@@ -26,26 +26,13 @@ function setCurrentLocation(locationID){
 
 
 //add location in DB witha  name and country
-/*function addLocation(name, country){
+function addLocation(name, country){
     var locID=getDBLocationID(name,country);
     //if the location with the same name doesn't alerady exist in DB
     if (locID==0){
         var currentTime = new Date();
         //longitude and latitude temporarly set as 1 until getLocation is implemented
         setDBLocation(name, country, 1, 1, currentTime,"false")
-    }
-    else{
-        window.popup.msg="Location already exists!";
-        window.popup.state="on";
-    }
-}*/
-function addLocation(name, country,lon,lat){
-    var locID=getDBLocationID(name,country);
-    //if the location with the same name doesn't alerady exist in DB
-    if (locID==0){
-        var currentTime = new Date();
-        //longitude and latitude temporarly set as 1 until getLocation is implemented
-        setDBLocation(name, country,lon, lat, currentTime,"false")
     }
     else{
         window.popup.msg="Location already exists!";
@@ -97,12 +84,3 @@ function deleteLocationbyName(name,country){
     return answer;*/
 }
 
-function createGeoQuery(name,country){
-    var query=name+",+"+country+"&format=xml&addressdetails=1";
-    return query;
-}
-
-function createReverseGeoQuery(lat,lon){
-    var query="lat="+lat+"&lon="+lon+"&addressdetails=1";
-    return query;
-}

@@ -24,19 +24,11 @@ Rectangle {
     property ListModel locationsModel: lModel
     property string currentLocation: "Iasi"
     property int gLocationID:0
-    property string gLongitude:""
-    property string gLatitude:""
-    property string myLongitude:""
-    property string myLatitude:""
-    property string myCity:""
-    property string myCountry:""
     property bool modelReady: false
-    property bool geoReady:false
     property int modelData: 0
     property variant forecastData:null
     property Rectangle popup:popupDialog
     property string selectedCountry:""
-    property string selectedCity:""
 
     function switchView(newView) {
         cView=newView;
@@ -72,32 +64,40 @@ Rectangle {
         lModel.reload();
     }
 
-    function addLocation() {
-        LocationData.addLocation(selectedCity,selectedCountry,window.gLongitude,window.gLatitude);
+    function addLocation(name,country) {
+        console.log("adding "+name+" - "+country);
+        LocationData.addLocation(name,country);
         lModel.reload();
     }
 
-    function getGeoInfo(){
-        var queryString=LocationData.createGeoQuery(selectedCity,selectedCountry);
-        gModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
-        console.log(gModel.source);
-        gModel.reload();
+    /*returns the current weather for a location ID
+      the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
+    */
 
+	function getGeoInfo(name,country){
+
+            var queryString=LocationData.createGeoQuery(name,country);
+            gModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
+            console.log(gModel.source);
+            gModel.reload();
+            //get the weather data from DB
+            //savedCurrent=Test.getWeatherRow(window.modelData);
+        /*}
+        else{
+            savedCurrent=savedData;
+        }*/
+    //return savedCurrent;
     }
 
     function getReverseGeoInfo(lat,lon){
-        var queryString=LocationData.createReverseGeoQuery(lat,lon);
+        //var queryString=LocationData.createGeoQuery(name,country);
         //rModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
         //rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.7479910462652&lon=21.2259409031774&addressdetails=1";
         rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.8304100846569&lon=24.9244750266311&addressdetails=1";
-        rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&"+queryString;
         console.log(rModel.source);
         rModel.reload();
     }
 	
-    /*returns the current weather for a location ID
-      the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
-    */
     function getCurrentInfo(locID){
         var savedCurrent="";
         var savedData=WeatherData.verifyLastReq(locID,"current");
@@ -315,7 +315,7 @@ Rectangle {
         ForecastModel{
             id:forecastModel
 		}
- 		GeoModel{
+ GeoModel{
             id:gModel
         }
         ReverseGeoModel{
