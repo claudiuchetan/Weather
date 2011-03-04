@@ -180,13 +180,13 @@ var db = getDatabase();
 /* read ID of a location */
 function getDBLocationID(name,country)
 {
+
     var db = getDatabase();
     var res=0;
 
     db.transaction(function(tx) {
-            var rs = tx.executeSql('SELECT id FROM Location WHERE name=? and country=?;',[name,country]);
+            var rs = tx.executeSql('SELECT * FROM Location WHERE name=? and country=?;',[name,country]);
             if (rs.rows.length > 0) {
-                console.log(">>>>>>>>>>>");
                 res = rs.rows.item(0).id;
             }   })
     return res;
@@ -197,7 +197,12 @@ function deleteDataRow(id, table) {
     var res="";
 
     db.transaction(function(tx) {
-            var rs = tx.executeSql('DELETE FROM '+table+' WHERE id=?;', [id]);
+            if(table=="Location_Weather"){
+                var rs = tx.executeSql('DELETE FROM '+table+' WHERE idLocation=?;', [id]);
+            }
+            else{
+                var rs = tx.executeSql('DELETE FROM '+table+' WHERE id=?;', [id]);
+            }
             if (rs.rowsAffected > 0) {
                 res="OK";
             } else {

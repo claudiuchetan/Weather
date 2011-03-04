@@ -142,7 +142,8 @@ Rectangle {
         onClicked : {
             if (window.selectedCountry!="") {
                 if (input.text!="") {
-                    window.addLocation(input.text.toLowerCase(),window.selectedCountry.toLowerCase());
+                    window.selectedCity=input.text.toLowerCase();
+                    window.getGeoInfo();
                     input.text=""
                 } else {
                     window.popup.msg="Please enter a location name";
@@ -227,7 +228,7 @@ Rectangle {
                             if (type!="header") {
                                 countryName.text=countryItem.text
                                 selectCountry.state="off"
-                                window.selectedCountry=countryItem.text
+                                window.selectedCountry=countryItem.text.toLowerCase()
                             }
                         }
                     }
