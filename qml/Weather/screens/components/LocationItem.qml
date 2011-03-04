@@ -64,7 +64,7 @@ Rectangle {
         customHeight: 16
         customWidth: 15
         onClicked : {
-            window.removeLocation(value);
+            window.removeLocation(value,"Romania");
         }
     }
     Hr {

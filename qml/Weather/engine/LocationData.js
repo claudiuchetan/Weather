@@ -47,16 +47,17 @@ function getLocationID(name,country)
 }
 
 function deleteLocationbyID(id){
+    var answer=getWeatherID(id);
     deleteDataRow(id,"Location");
-    /*var answer=getWeatherID(id);
     var i=1;
     var numIds=answer.length;
+    console.log(numIds);
     if (numIds>0){
     for (i=1;i<=numIds;i++){
         deleteDataRow(answer[i],"Weather_Data");
         }
     deleteDataRow(id,"Location_Weather");
-    }*/
+    }
 }
 
 /*function deleteLocationbyName(name,country){
@@ -64,7 +65,21 @@ function deleteLocationbyID(id){
     return answer;
 }*/
 
-function deleteLocationbyName(name){
+function deleteLocationbyName(name,country){
+    /*var id=getDBLocationID(name,country);
+    console.log("id-ul tarii:");
+    var answer=getWeatherID(id);
+    deleteDataRow(id,"Location");
+    var i=1;
+    var numIds=answer.length;
+    console.log(numIds);
+    if (numIds>0){
+    for (i=1;i<=numIds;i++){
+        deleteDataRow(answer[i],"Weather_Data");
+        }
+    deleteDataRow(id,"Location_Weather");
+    }*/
+
     var answer=deleteDBLocation(name);
     return answer;
 }

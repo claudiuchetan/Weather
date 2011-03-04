@@ -49,10 +49,8 @@ function setDBWeather(date, temp, temp_min, temp_max, precip, wind, humidity, pr
     var db = getDatabase();
     var res = "";
     var id=0;
-    //id=getNumRows("Weather_Data")+1;
     id=getMaxID("Weather_Data")+1;
     db.transaction(function(tx) {
-        console.log("DATABASE:"+date);
         var rs = tx.executeSql('INSERT INTO Weather_Data VALUES (?,?,?,?,?,?,?,?,?,?,?);', [id,date, temp, temp_min, temp_max, precip, wind, humidity, presure,desc,date_forecast])
         if (rs.rowsAffected > 0) {
             res = id;
@@ -101,11 +99,11 @@ function getMaxID(table)
     //var num=0;
     db.transaction(function(tx) {
     var rs = tx.executeSql('SELECT MAX(id) as MAXID FROM '+table+';');
-    if (rs.rows.length > 0) {
+    if (rs.rows.item(0).MAXID !=0){
         var res1 = rs.rows.item(0).MAXID;
         res=eval(res1);
      } else {
-         res = 0;     }  })
+        res = 0;     }  })
     return res;
 }
 
@@ -188,6 +186,7 @@ function getDBLocationID(name,country)
     db.transaction(function(tx) {
             var rs = tx.executeSql('SELECT id FROM Location WHERE name=? and country=?;',[name,country]);
             if (rs.rows.length > 0) {
+                console.log(">>>>>>>>>>>");
                 res = rs.rows.item(0).id;
             }   })
     return res;
@@ -248,5 +247,18 @@ function deleteDBLocation(name) {
     return res;
 }
 
+function getAllWeatherID(locID){
+    var db = getDatabase();
+    var res=[];
 
+    db.transaction(function(tx) {
+            var rs = tx.executeSql('SELECT idWeather_Data FROM Location_Weather WHERE idLocation=? ',[locID]);
+            if (rs.rows.length > 0) {
+                for (var i=0;i<rs.rows.length;i++){
+                    res[i] = rs.rows.item(i).idWeather_Data;
+                }
+            } else {
+                res = -1;     }  })
+    return res;
+}
 

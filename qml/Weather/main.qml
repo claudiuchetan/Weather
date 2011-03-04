@@ -23,7 +23,7 @@ Rectangle {
     property bool isLandscape: (body.width>450)
     property ListModel locationsModel: lModel
     property string currentLocation: "Iasi"
-    property int gLocationID:1
+    property int gLocationID:0
     property bool modelReady: false
     property int modelData: 0
     property variant forecastData:null
@@ -59,7 +59,7 @@ Rectangle {
         Init.cleanDB();
     }
 
-    function removeLocation(name) {
+    function removeLocation(name,country) {
         LocationData.deleteLocationbyName(name);
         lModel.reload();
     }
@@ -125,6 +125,7 @@ Rectangle {
         if (HomeBehaviour.weatherQueue.length>0) {
             var locationID=HomeBehaviour.weatherQueue.pop();
             console.log("getting queued weather for "+locationID);
+            gLocationID=locationID;
             getCurrentInfo(locationID);
         }
     }
@@ -281,7 +282,7 @@ Rectangle {
         }
 
         Component.onCompleted: {
-            //            Init.initDB();
+            //Init.initDB();
             switchView("Home");
         }
 	CurrentWeatherModel{
