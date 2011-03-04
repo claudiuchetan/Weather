@@ -7,7 +7,6 @@ Rectangle {
     id:wrapper
     color:"#00000000"
 
-
     /*
      * Country input
      */
@@ -55,6 +54,7 @@ Rectangle {
         onClicked: {
             selectCountry.state="on"
         }
+        z:countryInput.z+1
     }
 
 
@@ -93,12 +93,13 @@ Rectangle {
         width:backInput.width-10
         font.pixelSize: 18
         font.capitalization: Font.AllUppercase
-        color:"#333"
         text:  "Add City"
         clip:true
         anchors.verticalCenter: backInput.verticalCenter
         anchors.left: backInput.left
         z:backInput.z+1
+        readOnly: (window.selectedCountry=="")?true:false
+        color:(window.selectedCountry=="")?"#bbb":"#333"
     }
 
     Rectangle {
@@ -107,7 +108,7 @@ Rectangle {
         y: backInput.y+40
         radius:8
         color:"#333"
-        height: Math.min(wrapper.height-120,39*list.count)
+        height: Math.min(wrapper.height-220,39*(list.count+1))
         z:backInput.z-3
         anchors.left: backInput.left
         anchors.leftMargin: -10
@@ -140,9 +141,16 @@ Rectangle {
         customWidth: 20
         onClicked : {
             if (window.selectedCountry!="") {
-                window.addLocation(input.text,window.selectedCountry);
+                if (input.text!="") {
+
+                    window.addLocation(input.text.toLowerCase(),window.selectedCountry.toLowerCase());
+                    input.text=""
+                } else {
+                    window.popup.msg="Please enter a location name";
+                    window.popup.state="on";
+                }
             } else {
-                window.popup.msg="You must choose a country!";
+                window.popup.msg="You must choose a country";
                 window.popup.state="on";
             }
         }
@@ -257,6 +265,5 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        console.log("Settings loaded");
     }
 }

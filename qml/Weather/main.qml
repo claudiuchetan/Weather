@@ -7,11 +7,12 @@ import "engine/LocationData.js" as LocationData
 import "engine/Database.js" as Bla
 import "screens"
 import "engine"
-import"engine/WeatherData.js" as Test
+import"engine/WeatherData.js" as WeatherData
 import "screens/components"
 
 Rectangle {
     id:window
+    color:"#333"
     property string cView:""
     property string backDayPortrait:"images/background.png"
     property string backNightPortrait:"images/background_night.png"
@@ -22,13 +23,12 @@ Rectangle {
     property bool isLandscape: (body.width>450)
     property ListModel locationsModel: lModel
     property string currentLocation: "Iasi"
-    color:"#333"
     property int gLocationID:1
     property bool modelReady: false
     property int modelData: 0
     property variant forecastData:null
     property Rectangle popup:popupDialog
-    property string selectedCountry:"";
+    property string selectedCountry:""
 
     function switchView(newView) {
         cView=newView;
@@ -65,9 +65,10 @@ Rectangle {
     }
 
     function addLocation(name,country) {
+        console.log("adding "+name+" - "+country);
         LocationData.addLocation(name,country);
         lModel.reload();
-	}
+    }
 
     /*returns the current weather for a location ID
       the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
@@ -75,64 +76,80 @@ Rectangle {
 
     function getCurrentInfo(locID){
         var savedCurrent="";
-        var savedData=Test.verifyLastReq(locID,"current");
+        var savedData=WeatherData.verifyLastReq(locID,"current");
+        console.log("cweather for: "+locID);
         //if weather data for locID has not been saved in DB in the last hour
         if (savedData == "")
         {
             //get the weather data from server
-            var queryString=Test.createQueryString(locID,"current");
-            test1.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
-            console.log(test1.source);
-            test1.reload();
+            var queryString=WeatherData.createQueryString(locID,"current");
+            weatherModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+            console.log(weatherModel.source);
+            weatherModel.reload();
             //get the weather data from DB
-            savedCurrent=Test.getWeatherRow(window.modelData);
+            savedCurrent=WeatherData.getWeatherRow(window.modelData);
         }
         else{
+            console.log("already in DB "+locID);
             savedCurrent=savedData;
         }
-    return savedCurrent;
+        return savedCurrent;
     }
 
     /*returns the forecast for the interval today -> today+4days
       the answer includes 5 objects, each having the following fields:date,temp_min,temp_max,precipitation,wind_speed,weather_desc
     */
-function getForecastInfo(locID){
+    function getForecastInfo(locID){
         var savedForecast=[];
-        var alreadyData=Test.verifyLastReq(locID,"forecast");
+        var alreadyData=WeatherData.verifyLastReq(locID,"forecast");
         if (alreadyData.length<1)
         {
-            var queryString=Test.createQueryString(locID,"forecast");
-            fModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
-            console.log(fModel.source);
-            fModel.reload();
+            var queryString=WeatherData.createQueryString(locID,"forecast");
+            forecastModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+            console.log(forecastModel.source);
+            forecastModel.reload();
             var weatherIDs=window.forecastData;
             //foreach id returned by the model, get the row from database
             for (var i=0;i<weatherIDs.length; i++){
-                savedForecast=Test.getWeatherRow(weatherIDs[i]);
+                savedForecast=WeatherData.getWeatherRow(weatherIDs[i]);
             }
         }
         else{
-           savedForecast=alreadyData;
+            savedForecast=alreadyData;
         }
         return savedForecast;
     }
 
+    function getWeatherFromQueue() {
+        console.log("queue has: "+HomeBehaviour.weatherQueue.length);
+        if (HomeBehaviour.weatherQueue.length>0) {
+            var locationID=HomeBehaviour.weatherQueue.pop();
+            console.log("getting queued weather for "+locationID);
+            getCurrentInfo(locationID);
+        }
+    }
+
     ListModel  {
+        id: lModel
         function reload() {
             lModel.clear();
             var locations=LocationData.listLocations();
             var j=0;
             for (var i=0;i<locations.length;i++) {
+//                getCurrentInfo(locations[i].id);
+                HomeBehaviour.weatherQueue.push(locations[i].id);
                 if (j>=HomeBehaviour.weatherDev.length) j=0;
                 locationsModel.append({
-                                 "degrees": HomeBehaviour.weatherDev[j].degrees,
-                                 "state": HomeBehaviour.weatherDev[j].state,
-                                 "name": locations[i].name,
-                                 "icon":HomeBehaviour.weatherDev[j].icon});
+                                      "degrees": HomeBehaviour.weatherDev[j].degrees,
+                                      "state": HomeBehaviour.weatherDev[j].state,
+                                      "name": locations[i].name,
+                                      "id": locations[i].id,
+                                      "icon":HomeBehaviour.weatherDev[j].icon});
                 j++;
             }
+            console.log("there are "+HomeBehaviour.weatherQueue.length+" id-s in the queue");
+            getWeatherFromQueue();
         }
-        id: lModel
         Component.onCompleted:{
             reload();
         }
@@ -203,135 +220,25 @@ function getForecastInfo(locID){
             ]
         }
 
-        Rectangle {
-            id:secondaryMenu
-            width:body.width
-            height:50
-            opacity: 0.5
-            color:"#00000000"
-            z:1000
-            anchors.margins: {
-                top: 9
-                bottom: 9
-                left: 9
-                right: 9
-            }
-            Button {
-                id:buttonSettings
-                icon:"settings"
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: 10
-                customHeight: 24
-                customWidth: 24
-                onClicked: {
-                    switchView("Settings");
-                }
-            }
-            Button {
-                id:buttonRefresh
-                icon:"refresh"
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                customHeight: 24
-                customWidth: 24
-                onClicked: {
-                    refresh();
-                }
-            }
-            Button {
-                id:buttonLogout
-                icon:"logout"
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
-                customHeight: 24
-                customWidth: 24
-                onClicked: {
-                    Qt.quit();
-                }
-            }
+        SecondayMenu {
+            z:900
         }
+
         /*
-      the foreground that appears above screens but behind the main buttons
-      */
+        the foreground that appears above screens but behind the main buttons
+        */
         Image {
             id: foreground
             source:  "images/foreground.png"
-            width:body.width
+            width:parent.width
             height:195
             y:body.height-120
             z:900
         }
 
-        /*
-      All screens menu; in portrait is at the bottom; in landscape is at the right
-      */
-        Row {
-            id:mainMenu
-            height:65
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 15
-            anchors.horizontalCenter: parent.horizontalCenter
+        MainMenu {
             z:1000
-            spacing:isLandscape?80:30
-            Button {
-                id:buttonHome
-                icon:"home"
-                customWidth: 53
-                customHeight: 72
-                anchors.top: parent.top
-                anchors.topMargin: -7
-                onClicked: {
-                    switchView("Home");
-                }
-            }
-            Button {
-                id:buttonForecast
-                icon:"forecast"
-                anchors.top: parent.top
-                customWidth: 45
-                onClicked: {
-                    switchView("Forecast");
-                }
-            }
-            Button {
-                id:buttonCharts
-                icon:"graphics"
-                customWidth: 42
-                anchors.top: parent.top
-                onClicked: {
-                    switchView("Analytics");
-                }
-            }
-            Button {
-                id:buttonMap
-                icon:"map"
-                anchors.top: parent.top
-                onClicked: {
-                    switchView("Location");
-                }
-            }
-            states: [
-                State {
-                    name: "off"
-                    PropertyChanges { target: mainMenu; opacity:0; height: 100; visible:false}
-                },
-                State {
-                    name: "on"
-                    PropertyChanges { target: mainMenu; opacity:1; visible:true }
-                }
-            ]
-            transitions: [
-                Transition {
-                    NumberAnimation {
-                        target: mainMenu; easing.type: Easing.OutCirc; properties: "opacity, visible"; duration:600;
-                    }
-                    NumberAnimation {
-                        target: mainMenu; easing.type: Easing.OutCirc; properties: "height"; duration:300;
-                    }
-                }
-            ]
+            id:mainMenu
         }
 
         /*
@@ -374,14 +281,14 @@ function getForecastInfo(locID){
         }
 
         Component.onCompleted: {
-//            Init.initDB();
+            //            Init.initDB();
             switchView("Home");
         }
 	CurrentWeatherModel{
-            id:test1
+            id:weatherModel
         }
         ForecastModel{
-            id:fModel
+            id:forecastModel
         }
     }
 }

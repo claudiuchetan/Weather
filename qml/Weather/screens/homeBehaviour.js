@@ -1,9 +1,7 @@
-.pragma library
 Qt.include("../engine/interfaceLocation.js");
 Qt.include("../engine/interfaceWeather.js");
 
 var startingBlock=0;
-
 
 function scrollToLocation(currentElementPosition, screenWidth) {
     var elementVariationX=currentElementPosition-startingBlock * screenWidth;
@@ -16,3 +14,5 @@ function scrollToLocation(currentElementPosition, screenWidth) {
     }
     return (startingBlock * screenWidth);
 }
+
+var weatherQueue=[];
