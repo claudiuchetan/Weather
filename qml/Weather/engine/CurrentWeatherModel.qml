@@ -27,6 +27,7 @@ import "WeatherData.js" as WData
                     console.log("ID-ul ESTE:"+wID);
                     window.modelData=wID;
                 }
+                window.getWeatherFromQueue();
             }
         }
     }
