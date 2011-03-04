@@ -7,7 +7,7 @@ DEPLOYMENTFOLDERS = folder_01
 QML_IMPORT_PATH =
 
 # Avoid auto screen rotation
-#DEFINES += ORIENTATIONLOCK
+DEFINES += ORIENTATIONLOCK
 
 # Needs to be defined for Symbian
 DEFINES += NETWORKACCESS
@@ -19,7 +19,7 @@ TARGET.CAPABILITY += Location
 
 # Define QMLJSDEBUGGER to allow debugging of QML in debug builds
 # (This might significantly increase build time)
-# DEFINES += QMLJSDEBUGGER
+DEFINES += QMLJSDEBUGGER
 
 # If your application uses the Qt Mobility libraries, uncomment
 # the following lines and add the respective components to the 
