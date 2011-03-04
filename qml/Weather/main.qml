@@ -60,7 +60,7 @@ Rectangle {
     }
 
     function removeLocation(name,country) {
-        LocationData.deleteLocationbyName(name);
+        LocationData.deleteLocationbyName(name,country);
         lModel.reload();
     }
 

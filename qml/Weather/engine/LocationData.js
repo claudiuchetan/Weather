@@ -66,21 +66,21 @@ function deleteLocationbyID(id){
 }*/
 
 function deleteLocationbyName(name,country){
-    /*var id=getDBLocationID(name,country);
-    console.log("id-ul tarii:");
-    var answer=getWeatherID(id);
+    var id=getDBLocationID(name,country);
+    console.log("id-ul tarii:"+id);
+    var answer=getAllWeatherID(id);
     deleteDataRow(id,"Location");
     var i=1;
     var numIds=answer.length;
     console.log(numIds);
     if (numIds>0){
-    for (i=1;i<=numIds;i++){
+    for (i=0;i<numIds;i++){
         deleteDataRow(answer[i],"Weather_Data");
         }
     deleteDataRow(id,"Location_Weather");
-    }*/
+    }
 
-    var answer=deleteDBLocation(name);
-    return answer;
+    /*var answer=deleteDBLocation(name);
+    return answer;*/
 }
 
