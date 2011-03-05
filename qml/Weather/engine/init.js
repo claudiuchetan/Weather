@@ -14,6 +14,7 @@ function initDB() {
 }
 
 function clean(){
+    console.log("CLEAN");
     cleanDB();
 }
 function addLocation(name) {

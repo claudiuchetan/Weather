@@ -330,6 +330,7 @@ Rectangle {
 
         Component.onCompleted: {
             //Init.initDB();
+            //Init.clean();
             gpsTimer.start();
             if (myLatitude!="" && myLongitude!="") {
                 window.getReverseGeoInfo(window.myLatitude,window.myLongitude);

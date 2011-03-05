@@ -15,13 +15,11 @@ function initialize() {
 
 function cleanDB() {
     var db = getDatabase();
+    console.log("IN DB clean");
     db.transaction( function(tx) {
-        var rs=tx.executeSql('DROP DATABASE WTFTeste ');
-                       if (rs.rowsAffected > 0) {
-                           res="OK";
-                       } else {
-                           console.log("!!!Error cleaning DB");
-                           res = "Unknown";     }
+        var rs=tx.executeSql('DROP TABLE Location');
+        var rs2=tx.executeSql('DROP TABLE Location_Weather');
+        var rs3=tx.executeSql('DROP TABLE Weather_Data');
                });
 }
 
