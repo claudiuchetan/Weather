@@ -135,14 +135,13 @@ function getDataRow(id, table) {
 /*gets the current set location in DB*/
 function getDBCurrentLocation(){
     var db = getDatabase();
-    var res="";
+    var res=0;
 
     db.transaction(function(tx) {
         var rs = tx.executeSql('SELECT * FROM Location WHERE current="true";');
             if (rs.rows.length > 0) {
                 res = rs.rows.item(0);
-            } else {
-                res = "Unknown";     }  })
+            }  })
     return res;
 }
 
@@ -151,20 +150,18 @@ function setDBLocationAsCurrent(locationID, pastLocationId){
 var db = getDatabase();
     var res1=""; var res2="";
     db.transaction(function(tx) {
-        var rs = tx.executeSql('UPDATE Location SET current="false" WHERE id=?;',[pastLocationId]);
-        if (rs.rowsAffected > 0) {
-            res1 = "OK";
-            db.transaction(function(tx) {
-                               var rs2 = tx.executeSql('UPDATE Location SET current="true" WHERE id=?;',[locationID]);
+        if (pastLocationId!=0){
+            var rs = tx.executeSql('UPDATE Location SET current="false" WHERE id=?;',[pastLocationId]);
+            if (rs.rowsAffected > 0) {
+                res1 = "OK";
+            }
+        }
+        var rs2 = tx.executeSql('UPDATE Location SET current="true" WHERE id=?;',[locationID]);
                 if (rs2.rowsAffected > 0) {
                     res2 = "OK";
                 } else {
                     res2 = "Error";
                 }
-                });
-        } else {
-            res1 = "Error";
-        }
         }  );
     if ((res1=="Error") || (res2=="Error"))
     {

@@ -17,7 +17,11 @@ function listLocations(){
 
 //set current location as CURRENT in DB
 function setCurrentLocation(locationID){
-    var cLocationID= getCurrentLocation.id;
+    var answer=getCurrentLocation();
+    var cLocationID=0;
+    if(answer!=0){
+        cLocationID= answer.id;
+    }
     if (locationID != cLocationID){
         setDBLocationAsCurrent(locationID,cLocationID);
     }

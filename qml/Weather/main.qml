@@ -338,6 +338,8 @@ Rectangle {
             } else {
                 gpsTimer.start();
             }
+            /*LocationData.setCurrentLocation(1);
+            var curData=LocationData.getCurrentLocation();*/
             switchView("Home");
         }
 	CurrentWeatherModel{
