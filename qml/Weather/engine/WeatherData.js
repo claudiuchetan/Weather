@@ -5,16 +5,18 @@ function createQueryString(locationID,type){
     var numDays=0;
     var key="3d571c8060200122110802";
     var answer=getDataRow(locationID,"Location");
-    var city=answer.name;
-    var country=answer.country;
+    //var city=answer.name;
+    //var country=answer.country;
+    var longitude=answer.longitudine;
+    var latitude=answer.latitude;
     if (type=="current"){
         numDays=1;
     }
     else{
         numDays=5;
     }
-    var query=city+","+country+"&format=xml&num_of_days="+numDays+"&key="+key;
-    console.log(query);
+    //var query=city+","+country+"&format=xml&num_of_days="+numDays+"&key="+key;
+    var query=latitude+","+longitude+"&format=xml&num_of_days="+numDays+"&key="+key;
     return query;
 }
 

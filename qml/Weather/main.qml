@@ -111,6 +111,7 @@ Rectangle {
         //get the weather data from server
         var queryString=WeatherData.createQueryString(locID,"current");
         weatherModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+        console.log(weatherModel.source);
         weatherModel.reload();
         //get the weather data from DB
         return WeatherData.getWeatherRow(window.modelData);
@@ -126,9 +127,9 @@ Rectangle {
             var locationID=Logic.currentWeatherQueue.pop();
             gLocationID=locationID;
             var data=getCurrentInfo(locationID);
-            //            if (data!="") {
-            //                weatherTimer.start();
-            //            }
+                     if (data!="") {
+                           weatherTimer.start();
+                        }
         }
     }
 
