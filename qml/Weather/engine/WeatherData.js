@@ -2,8 +2,13 @@ Qt.include("Database.js")
 
 // read weather data for location id and type:current, forecast
 function createQueryString(locationID,type){
+    var keys=["3d571c8060200122110802","91d78dcb5e154346110503", "362d6b9956154847110503"]
+    var randomnumber=Math.floor(Math.random()*3)
+    console.log("random:"+randomnumber);
+    console.log("THE KEY:"+keys[randomnumber]);
+    var key=keys[randomnumber];
     var numDays=0;
-    var key="3d571c8060200122110802";
+    //var key="3d571c8060200122110802";
     var answer=getDataRow(locationID,"Location");
     //var city=answer.name;
     //var country=answer.country;

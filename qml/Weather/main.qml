@@ -95,8 +95,6 @@ Rectangle {
 
     function getReverseGeoInfo(lat,lon){
         var queryString=LocationData.createReverseGeoQuery(lat,lon);
-        //rModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
-        //rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.7479910462652&lon=21.2259409031774&addressdetails=1";
         rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.8304100846569&lon=24.9244750266311&addressdetails=1";
         rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&"+queryString;
         console.log(rModel.source);
@@ -332,12 +330,12 @@ Rectangle {
         Component.onCompleted: {
             //Init.initDB();
             //Init.clean();
-            gpsTimer.start();
+            /*gpsTimer.start();
             if (myLatitude!="" && myLongitude!="") {
                 window.getReverseGeoInfo(window.myLatitude,window.myLongitude);
             } else {
                 gpsTimer.start();
-            }
+            }*/
             /*LocationData.setCurrentLocation(1);
             var curData=LocationData.getCurrentLocation();*/
             switchView("Home");
