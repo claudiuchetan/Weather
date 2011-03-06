@@ -21,11 +21,11 @@ Rectangle {
             color:"#6e6e6e"
         }
         Text {
-            text:  pValue
+            text:  (pValue=="")?"?":pValue
             horizontalAlignment: Text.AlignRight
             width:parent.width
             font.pixelSize: 28
-            color:"#111"
+            color:(pValue=="")?"#999":"#111"
         }
         Text {
             text:  pUnit

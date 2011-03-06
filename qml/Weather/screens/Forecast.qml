@@ -3,7 +3,16 @@ import "components"
 
 Item {
     y:30
-
+    Column {
+        y:60
+    Repeater {
+        model:5
+            ForecastSeparator {
+                pDay:window.getLogic().getForecastDay(index);
+//                pDay:"5"
+            }
+        }
+    }
     ListView {
         id: view
         anchors { fill: parent; bottomMargin: 30 }
@@ -24,5 +33,10 @@ Item {
         orientation: ListView.Horizontal
         snapMode: ListView.SnapToItem
         flickDeceleration: 2000
+    }
+
+    Hr {
+        id:hr
+        y:50
     }
 }

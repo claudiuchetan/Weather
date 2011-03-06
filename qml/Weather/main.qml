@@ -50,6 +50,12 @@ Rectangle {
         cView=newView;
         screenManager.state="switch"
     }
+
+    function alert(msg) {
+        popup.msg=msg;
+        popup.state="permanent"
+    }
+
     function setOrientation(angle) {
         body.rotation=angle;
         if (angle==0 || angle==180) {
@@ -85,29 +91,15 @@ Rectangle {
         lModel.reload();
     }
 
-    function getGeoInfo(){
-        var queryString=LocationData.createGeoQuery(selectedCity,selectedCountry);
-        gModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
-        console.log(gModel.source);
-        gModel.reload();
-
-    }
-
-    function getReverseGeoInfo(lat,lon){
-        var queryString=LocationData.createReverseGeoQuery(lat,lon);
-        //rModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
-        //rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.7479910462652&lon=21.2259409031774&addressdetails=1";
-        rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.8304100846569&lon=24.9244750266311&addressdetails=1";
-        rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&"+queryString;
-        console.log(rModel.source);
-        rModel.reload();
+    function addGpsLocation(city, country, longitude, latitude) {
+        LocationData.addLocation(city,country,longitude,latitude);
+        weatherTimer.start();
     }
 
     /*returns the current weather for a location ID
       the result has the following fields: temperature,precipitation, wind_speed,humidity,pressure,weather_desc
     */
     function getCurrentInfo(locID){
-        console.log("Reading online weather for: "+locID);
         //get the weather data from server
         var queryString=WeatherData.createQueryString(locID,"current");
         weatherModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
@@ -117,7 +109,6 @@ Rectangle {
     }
 
     function getCurrentInfoCached(locID){
-        console.log("Reading cached data for location "+locID);
         return WeatherData.verifyLastReq(locID,"current");
     }
 
@@ -178,12 +169,50 @@ Rectangle {
         interval: 10000
         onTriggered: {
             gps.getCoordinates();
-            if (myLatitude!="" && myLongitude!="") {
+            if (!isNaN(myLatitude) && !isNaN(myLongitude) && myLatitude!="" && myLongitude!="") {
+                popup.msg="I found your location. \nAdding it to the list.";
+                popup.state="on";
                 window.getReverseGeoInfo(window.myLatitude,window.myLongitude);
-                LocationData.addLocation(myCity,myCountry,window.myLongitude,window.myLatitude);
-                lModel.reload();
+            } else {
+//                popup.msg="No location was found, I'll try again in 10 seconds.'";
+//                popup.state="on";
+                gpsTimer.start();
             }
         }
+    }
+
+    function getGeoInfo(){
+        var queryString=LocationData.createGeoQuery(selectedCity,selectedCountry);
+        gModel.source="http://nominatim.openstreetmap.org/search?q="+queryString;
+        gModel.reload();
+    }
+
+    function getReverseGeoInfo(lat,lon){
+        var queryString=LocationData.createReverseGeoQuery(lat,lon);
+        rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&lat=45.8304100846569&lon=24.9244750266311&addressdetails=1";
+        rModel.source="http://nominatim.openstreetmap.org/reverse?format=xml&accept-language=en-gb&"+queryString;
+        rModel.reload();
+    }
+
+    function markCurrent(id) {
+        currentLocation=id;
+        LocationData.setCurrentLocation(id);
+    }
+
+    CurrentWeatherModel{
+        id:weatherModel
+    }
+    ForecastModel{
+        id:forecastModel
+    }
+    GeoModel{
+        id:gModel
+    }
+    ReverseGeoModel{
+        id:rModel
+    }
+    GPSPosition{
+        id:gps
     }
 
     ListModel  {
@@ -329,29 +358,13 @@ Rectangle {
         }
 
         Component.onCompleted: {
-            //Init.initDB();
-            gpsTimer.start();
-            if (myLatitude!="" && myLongitude!="") {
-                window.getReverseGeoInfo(window.myLatitude,window.myLongitude);
+//            gpsTimer.start();
+            if (LocationData.listLocations().length>0) {
+                switchView("Home");
             } else {
-                gpsTimer.start();
+                popup.msg="Please add some locations."
+                switchView("Settings");
             }
-            switchView("Home");
-        }
-	CurrentWeatherModel{
-            id:weatherModel
-        }
-        ForecastModel{
-            id:forecastModel
-        }
-        GeoModel{
-            id:gModel
-        }
-        ReverseGeoModel{
-            id:rModel
-        }
-        GPSPosition{
-            id:gps
         }
     }
 }

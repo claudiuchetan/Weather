@@ -22,10 +22,6 @@ Rectangle {
         height:50
         clip:true
     }
-    Hr {
-        id:hr
-        anchors.top: location.bottom
-    }
     ListView {
         y:60
         Column {
@@ -33,7 +29,6 @@ Rectangle {
                 model:forecast
                 ForecastItem {
                     //date,temp_min,temp_max,precipitation,wind_speed,weather_desc
-                    pDay:window.getLogic().formatDate(date_forecast);
                     pTempMin:temp_min
                     pTempMax: temp_max
                     pPrecipitationChance: precipitation

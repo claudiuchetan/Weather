@@ -14,7 +14,6 @@ function createQueryString(locationID,type){
         numDays=5;
     }
     var query=city+","+country+"&format=xml&num_of_days="+numDays+"&key="+key;
-    console.log(query);
     return query;
 }
 

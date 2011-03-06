@@ -1,30 +1,43 @@
 import QtQuick 1.0
 
 Rectangle {
-    property string value:"undefined"
+    property string pCity:"undefined"
+    property string pCountry:"undefined"
     property variant positionBufferX: 0
     property variant positionBufferY: 0
+    property bool pLast:false
+    property int pId:-1
     width:parent.width
-    height:39
+    height:50
     color:"#00000000"
     Text {
-        id:name
-        text: value
+        id:city
+        text: pCity
         verticalAlignment: Text.AlignVCenter
-        height:parent.height
+        height:20
         font.pixelSize: 18
         font.capitalization: Font.AllUppercase
-        color:(window.currentLocation==name.text)?"#F69":"#EEE"
+        color:(window.currentLocation==pId)?"#F69":"#EEE"
+    }
+    Text {
+        id:country
+        text: pCountry
+        verticalAlignment: Text.AlignVCenter
+        height:14
+        font.pixelSize: 12
+        font.capitalization: Font.AllUppercase
+        color:(window.currentLocation==pId)?"#A47":"#999"
+        anchors.top: city.bottom
     }
     Image {
         id:markCurrent
         width:24
         height:24
-        anchors.right: name.right
-        anchors.verticalCenter: name.verticalCenter
+        anchors.right: city.right
+        anchors.verticalCenter: city.verticalCenter
         source:"../../images/star.png"
-        state: (window.currentLocation==name.text)?"checked":"unchecked"
-        anchors.rightMargin: -30
+        state: (window.currentLocation==pId)?"checked":"unchecked"
+        anchors.rightMargin: -40
         states: [
             State {
                 name:"checked"
@@ -52,22 +65,24 @@ Rectangle {
         height:parent.height
         width: parent.width-40
         onClicked: {
-            window.currentLocation=name.text
+            window.markCurrent(pId);
         }
     }
     Button {
         id:buttonRemove
         icon:"remove"
         anchors.right: parent.right
-        anchors.verticalCenter: name.verticalCenter
+        anchors.verticalCenter: city.verticalCenter
         anchors.rightMargin: 8
         customHeight: 16
         customWidth: 15
         onClicked : {
-            window.removeLocation(value,"romania");
+            window.removeLocation(pCity,pCountry);
         }
     }
     Hr {
-        anchors.top: name.bottom
+        anchors.top: country.bottom
+        anchors.topMargin: 3
+        visible: (!pLast)
     }
 }

@@ -19,17 +19,14 @@ import "WeatherData.js" as WData
 
         onStatusChanged: {
             if (status == XmlListModel.Ready) {
-            	console.log("statusChanged:"+XmlListModel.Ready);
                 if (currentModel.count>0){
                     var modelData=currentModel.get(0);
                     var wID=0;
                     wID=WData.saveCurrentWeather("current",gLocationID,modelData.temperature,"","",modelData.precipitation,modelData.windspeed,modelData.humidity,modelData.pressure,modelData.weather,"",modelData.code,modelData.image);
                     window.modelReady=true;
                     //returns the id of the row which was saved in Weather_Data
-                    console.log("ID-ul ESTE:"+wID);
-                    console.log("CODE:"+modelData.code);
-                    console.log("IMAGRURL:"+modelData.image);
                     window.modelData=wID;
+                    window.locationsModel.reload();
                 }
                 window.getCurrentWeatherFromQueue();
             }

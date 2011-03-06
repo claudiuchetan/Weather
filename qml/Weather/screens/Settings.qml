@@ -93,7 +93,7 @@ Rectangle {
         width:backInput.width-10
         font.pixelSize: 18
         font.capitalization: Font.AllUppercase
-        text:  "Add City"
+        text:"Add City"
         clip:true
         anchors.verticalCenter: backInput.verticalCenter
         anchors.left: backInput.left
@@ -108,7 +108,7 @@ Rectangle {
         y: backInput.y+40
         radius:8
         color:"#333"
-        height: Math.min(wrapper.height-220,39*(list.count+1))
+        height: Math.min(wrapper.height-220,42*(list.count+1))
         z:backInput.z-3
         anchors.left: backInput.left
         anchors.leftMargin: -10
@@ -126,7 +126,10 @@ Rectangle {
                 Column {
                 width:parent.width
                 LocationItem {
-                    value: name
+                    pCity: city
+                    pCountry: country
+                    pId:id
+                    pLast:last
                 }
             }
         }
@@ -143,7 +146,8 @@ Rectangle {
             if (window.selectedCountry!="") {
                 if (input.text!="") {
                     window.selectedCity=input.text.toLowerCase();
-                    window.getGeoInfo();
+//                    window.getGeoInfo();
+                    window.addLocation();
                     input.text=""
                 } else {
                     window.popup.msg="Please enter a location name";

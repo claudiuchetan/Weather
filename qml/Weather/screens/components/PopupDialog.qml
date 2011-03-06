@@ -13,13 +13,20 @@ Rectangle {
     Text {
         text: msg
         color:"#fb0a26"
-        font.pixelSize: 18
-        font.bold: true
+        font.pixelSize: 14
+        font.bold: false
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         anchors.fill: parent
-    }
+        wrapMode: Text.WrapAnywhere
 
+    }
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            dialog.state="off"
+        }
+    }
     states: [
         State {
             name:"off"
@@ -38,6 +45,13 @@ Rectangle {
                 script: {
                     timer.start()
                 }
+            }
+        },
+        State {
+            name:"permanent"
+            PropertyChanges {
+                target: dialog
+                opacity:0.9
             }
         }
     ]

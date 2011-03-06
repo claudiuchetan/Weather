@@ -1,6 +1,7 @@
 Qt.include("../engine/weatherIcons.js");
 var currentWeatherQueue=[];
 var forecastWeatherQueue=[];
+var forecastDays=[];
 
 function getIcon(code) {
     for (var i=0;i<weatherIcons.length;i++) {
@@ -31,9 +32,14 @@ function reloadCurrentWeatherModel(model) {
         model.append({
                      "degrees": degrees,
                      "description": description,
-                     "name": locations[i].name,
+                     "city": locations[i].name,
+                     "country": locations[i].country,
                      "id": locations[i].id,
+                     "last":(i==locations.length-1)?true:false,
                      "icon":icon});
+        if (locations[i].current==true) {
+            window.currentLocation=locations[i].id;
+        }
     }
     if (currentWeatherQueue.length>0) {
         getCurrentWeatherFromQueue(); }
@@ -53,6 +59,10 @@ function reloadForecastWeatherModel(model) {
                      "name": locations[i].name,
                      "id": locations[i].id,
                      "weatherData":weatherData});
+
+    }
+    for (var i=0;i<weatherData.length;i++) {
+        forecastDays.push(weatherData[i].date_forecast);
     }
     if (forecastWeatherQueue.length>0) {
         getForecastWeatherFromQueue(); }
@@ -60,4 +70,11 @@ function reloadForecastWeatherModel(model) {
 
 function formatDate(date) {
     return date.substring(5,date.length);
+}
+function getForecastDay(index) {
+    if (forecastDays[index]) {
+        return formatDate(forecastDays[index]);
+    } else {
+        return "";
+    }
 }

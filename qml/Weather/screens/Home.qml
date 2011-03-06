@@ -13,7 +13,7 @@ Item {
             WeatherWidget {
                 width:body.width
                 height:body.height
-                locationName: name
+                locationName: city
                 temperature: (degrees=="")?"":(degrees+"\u00B0C")
                 weatherState: description
                 iconSrc: (icon=="")?"":icon.src

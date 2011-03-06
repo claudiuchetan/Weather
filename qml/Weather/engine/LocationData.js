@@ -17,7 +17,7 @@ function listLocations(){
 
 //set current location as CURRENT in DB
 function setCurrentLocation(locationID){
-    var cLocationID= getCurrentLocation.id;
+    var cLocationID= getCurrentLocation().id;
     if (locationID != cLocationID){
         setDBLocationAsCurrent(locationID,cLocationID);
     }
@@ -64,7 +64,6 @@ function deleteLocationbyID(id){
     deleteDataRow(id,"Location");
     var i=1;
     var numIds=answer.length;
-    console.log(numIds);
     if (numIds>0){
     for (i=1;i<=numIds;i++){
         deleteDataRow(answer[i],"Weather_Data");
@@ -80,12 +79,10 @@ function deleteLocationbyID(id){
 
 function deleteLocationbyName(name,country){
     var id=getDBLocationID(name,country);
-    console.log("id-ul tarii:"+id);
     var answer=getAllWeatherID(id);
     deleteDataRow(id,"Location");
     var i=1;
     var numIds=answer.length;
-    console.log(numIds);
     if (numIds>0){
     for (i=0;i<numIds;i++){
         deleteDataRow(answer[i],"Weather_Data");
@@ -98,7 +95,7 @@ function deleteLocationbyName(name,country){
 }
 
 function createGeoQuery(name,country){
-    var query=name+",+"+country+"&format=xml&addressdetails=1";
+    var query=name+","+country+"&format=xml&addressdetails=1";
     return query;
 }
 

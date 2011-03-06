@@ -1,10 +1,8 @@
-initialize();
 function getDatabase() {
-    return openDatabaseSync("WTFTeste1", "1.0", "StorageDatabase for weather application", 100000);
+    return openDatabaseSync("WTFTestae2", "1.0", "StorageDatabase for weather application", 100000);
 }
 
 function initialize() {
-    console.log("INITIALIZE");
     var db = getDatabase();
     db.transaction( function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS Location(id INTEGER UNIQUE PRIMARY KEY, name TEXT,country TEXT, longitudine TEXT, latitude TEXT, date_added TIMESTAMP, current BOOL    )');
@@ -206,7 +204,7 @@ function deleteDataRow(id, table) {
             if (rs.rowsAffected > 0) {
                 res="OK";
             } else {
-                console.log("!!!");
+                console.log("Error deleting data row.");
                 res = "Unknown";     }  })
     return res;
 }

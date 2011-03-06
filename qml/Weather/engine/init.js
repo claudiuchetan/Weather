@@ -1,8 +1,14 @@
 Qt.include("Database.js");
 
+var oneTime=true;
+
+if (oneTime) {
+    initialize();
+    oneTime=false;
+}
+
 function initDB() {
     initialize();
-    console.log("!!!!");
     setDBLocation("Iasi","Romania", "123", "456", "02/12/2011","true");
     setDBLocation("Cluj-Napoca","Romania", "123", "456", "02/12/2011","false");
     setDBLocation("Timisoara","Romania", "123", "456", "02/12/2011","false");
@@ -17,7 +23,6 @@ function clean(){
     cleanDB();
 }
 function addLocation(name) {
-    console.log("adding "+name);
     setDBLocation(name,"Romania", "123", "456", "02/12/2011","false");
 }
 
@@ -31,7 +36,7 @@ function deleteLocation(name) {
             if (rs.rowsAffected > 0) {
                 res="OK";
             } else {
-                console.log("!!!");
+                console.log("Error deleting location.");
                 res = "Unknown";     }  })
     return res;
 }
