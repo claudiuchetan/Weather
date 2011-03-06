@@ -42,7 +42,8 @@ Rectangle {
     }
 
     function refresh() {
-        weatherTimer.start();
+        lModel.reload();
+        fModel.reload();
     }
 
     function switchView(newView) {

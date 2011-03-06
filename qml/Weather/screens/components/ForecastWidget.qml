@@ -30,10 +30,10 @@ Rectangle {
                 model:forecast
                 ForecastItem {
                     //date,temp_min,temp_max,precipitation,wind_speed,weather_desc
-                    pTempMin:temp_min
-                    pTempMax: temp_max
-                    pPrecipitationChance: precipitation
-                    pWindSpeed: wind_speed
+                    pTempMin: window.getLogic().normalize(temp_min)
+                    pTempMax: window.getLogic().normalize(temp_max)
+                    pPrecipitationChance: window.getLogic().normalize(precipitation)
+                    pWindSpeed: window.getLogic().normalize(wind_speed)
                     pWeather: weather_desc
                     pIconSrc: window.getLogic().getIcon(code).src
                 }

@@ -5,37 +5,37 @@ Rectangle {
     property string pWeather: "snow"
     property variant pIconWidth: 64
     property variant pIconHeight: 64
-    property variant pTempMax: 25
-    property variant pTempMin: 18
-    property variant pWindSpeed: 13
-    property variant pPrecipitationChance: 14
+    property string pTempMax: "25"
+    property string pTempMin: "18"
+    property string pWindSpeed: "13"
+    property string pPrecipitationChance: "14"
     property string pIconSrc:""
 
     height:93
     width:body.width
     color:"#00000000"
     border.width: 0
-//    Text {
-//        id:weather
-//        x: 20
-//        y: 0
-//        text: pWeather
-//        anchors.verticalCenter: parent.verticalCenter
-//        verticalAlignment: Text.AlignTop
-//        horizontalAlignment: Text.AlignLeft
-//        rotation:-90
-//        font.pixelSize: 18
-//        font.capitalization: Font.AllUppercase
-//        color:"#777"
-//    }
-        Image {
-            id:icon
-            source: (pIconSrc=="")?"":("../../images/small_icons/"+pIconSrc+".png")
-            width:pIconWidth
-            height:pIconHeight
-            anchors.verticalCenter: parent.verticalCenter
-            x:40
-        }
+    Text {
+        id:weather
+        x: 20
+        y: 0
+        text: pWeather
+        verticalAlignment: Text.AlignTop
+        horizontalAlignment: Text.AlignLeft
+        font.pixelSize: 12
+        color:"#333"
+        anchors.horizontalCenter: icon.horizontalCenter
+        anchors.top: icon.bottom
+        anchors.topMargin: -5
+    }
+    Image {
+        id:icon
+        source: (pIconSrc=="")?"":("../../images/small_icons/"+pIconSrc+".png")
+        width:pIconWidth
+        height:pIconHeight
+        anchors.verticalCenter: parent.verticalCenter
+        x:40
+    }
     Row {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter

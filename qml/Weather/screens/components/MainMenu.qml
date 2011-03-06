@@ -1,7 +1,5 @@
 import QtQuick 1.0
 
-
-
 /*
 All screens menu; in portrait is at the bottom; in landscape is at the right
 */

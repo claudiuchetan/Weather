@@ -108,3 +108,8 @@ function showWeatherError(src,error) {
         window.popup.state="permanent"
     }
 }
+function normalize(value) {
+    value=value+"";
+    var len=(value.length>3)?3:value.length;
+    return value.substring(0,len)
+}

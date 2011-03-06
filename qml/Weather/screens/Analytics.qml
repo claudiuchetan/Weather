@@ -3,12 +3,38 @@ import "components"
 
 Item {
     y:30
-    Column {
-        y:60
-    Repeater {
-        model:5
-            ForecastSeparator {
+    Row {
+        id:days
+        y:body.height-140
+        x:20
+        Repeater {
+            model:5
+            AnalyticsSeparator {
                 pDay:window.getLogic().getForecastDay(index);
+            }
+        }
+    }
+    Rectangle {
+        width:parent.width-20
+        anchors.right: parent.right
+        height:parent.height
+        color:"#00000000"
+        Repeater {
+            id:bars
+            model:4
+            Rectangle {
+                width:65
+                height:parent.height-130
+                y:50
+                x:{return 65*index }
+                color:"#00000000"
+                Rectangle {
+                    width:1
+                    height: parent.height
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    color:"#999"
+                }
             }
         }
     }
@@ -18,7 +44,7 @@ Item {
         model:  locationsForecastModel;
         delegate:
             Row{
-            ForecastWidget {
+            AnalyticsWidget {
                 width:body.width
                 height:body.height
                 locationName: name
@@ -35,7 +61,10 @@ Item {
     }
 
     Hr {
-        id:hr
         y:50
+    }
+    Hr {
+        anchors.bottom: days.top
+        anchors.bottomMargin: 5
     }
 }

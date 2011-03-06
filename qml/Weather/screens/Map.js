@@ -51,7 +51,7 @@ function initMap() {
                 new ovi.mapsapi.geo.Coordinate(Number(lat), Number(lon)),{
                 title: "marker",
                 visibility: true,
-                icon: "../images/small_icons/sun.png",
+                icon: "../images/small_icons/clear.png",
                 //offset the top left icon corner so that it's centered above the coordinate
                 anchor: new ovi.mapsapi.util.Point(16, 16)
                 });
