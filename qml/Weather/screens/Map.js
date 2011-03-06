@@ -5,14 +5,13 @@ function initMap() {
     markers = window.qml.qmlCall();
 
     map = new ovi.mapsapi.map.Display(document.getElementById("map"), {
-        zoomLevel: 18,
+        zoomLevel: 3,
         center: [46.776968, 23.614873]
     });
 
     map.addComponent( new ovi.mapsapi.map.component.zoom.DoubleClick() );
     map.addComponent( new ovi.mapsapi.map.component.panning.Drag() );
     map.addComponent( new ovi.mapsapi.map.component.ZoomBar() );
-    map.addComponent( new ovi.mapsapi.map.component.TypeSelector() );
 
     var searchType="geocode";
             var searchTerm,
@@ -45,13 +44,12 @@ function initMap() {
                             maxLat = lat;
                             minLon = lon;
                             topLeft = markers[i];
-                        }
-                map.zoomTo(new ovi.mapsapi.geo.BoundingBox (new ovi.mapsapi.geo.Coordinate(Number(topLeft.latitude), Number(topLeft.longitudine)), new ovi.mapsapi.geo.Coordinate(Number(bottomRight.latitude), Number(bottomRight.longitudine))));
+                        }               
                 marker = new ovi.mapsapi.map.Marker(
                 new ovi.mapsapi.geo.Coordinate(Number(lat), Number(lon)),{
                 title: "marker",
                 visibility: true,
-                icon: "../images/small_icons/sun.png",
+                icon: "../images/small_icons/clear.png",
                 //offset the top left icon corner so that it's centered above the coordinate
                 anchor: new ovi.mapsapi.util.Point(16, 16)
                 });
