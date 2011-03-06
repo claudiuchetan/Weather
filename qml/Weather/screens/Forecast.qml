@@ -9,7 +9,6 @@ Item {
         model:5
             ForecastSeparator {
                 pDay:window.getLogic().getForecastDay(index);
-//                pDay:"5"
             }
         }
     }

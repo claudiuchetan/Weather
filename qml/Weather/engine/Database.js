@@ -1,5 +1,5 @@
 function getDatabase() {
-    return openDatabaseSync("WTFTestae2", "1.0", "StorageDatabase for weather application", 100000);
+    return openDatabaseSync("WTFTestae3", "1.0", "StorageDatabase for weather application", 100000);
 }
 
 function initialize() {
@@ -13,13 +13,11 @@ function initialize() {
 
 function cleanDB() {
     var db = getDatabase();
+    console.log("IN DB clean");
     db.transaction( function(tx) {
-        var rs=tx.executeSql('DROP DATABASE WTFTeste ');
-                       if (rs.rowsAffected > 0) {
-                           res="OK";
-                       } else {
-                           console.log("!!!Error cleaning DB");
-                           res = "Unknown";     }
+        var rs=tx.executeSql('DROP TABLE Location');
+        var rs2=tx.executeSql('DROP TABLE Location_Weather');
+        var rs3=tx.executeSql('DROP TABLE Weather_Data');
                });
 }
 
@@ -135,14 +133,13 @@ function getDataRow(id, table) {
 /*gets the current set location in DB*/
 function getDBCurrentLocation(){
     var db = getDatabase();
-    var res="";
+    var res=0;
 
     db.transaction(function(tx) {
         var rs = tx.executeSql('SELECT * FROM Location WHERE current="true";');
             if (rs.rows.length > 0) {
                 res = rs.rows.item(0);
-            } else {
-                res = "Unknown";     }  })
+            }  })
     return res;
 }
 
@@ -151,20 +148,18 @@ function setDBLocationAsCurrent(locationID, pastLocationId){
 var db = getDatabase();
     var res1=""; var res2="";
     db.transaction(function(tx) {
-        var rs = tx.executeSql('UPDATE Location SET current="false" WHERE id=?;',[pastLocationId]);
-        if (rs.rowsAffected > 0) {
-            res1 = "OK";
-            db.transaction(function(tx) {
-                               var rs2 = tx.executeSql('UPDATE Location SET current="true" WHERE id=?;',[locationID]);
+        if (pastLocationId!=0){
+            var rs = tx.executeSql('UPDATE Location SET current="false" WHERE id=?;',[pastLocationId]);
+            if (rs.rowsAffected > 0) {
+                res1 = "OK";
+            }
+        }
+        var rs2 = tx.executeSql('UPDATE Location SET current="true" WHERE id=?;',[locationID]);
                 if (rs2.rowsAffected > 0) {
                     res2 = "OK";
                 } else {
                     res2 = "Error";
                 }
-                });
-        } else {
-            res1 = "Error";
-        }
         }  );
     if ((res1=="Error") || (res2=="Error"))
     {

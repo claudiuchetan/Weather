@@ -12,7 +12,7 @@ Rectangle {
     property string pIconSrc:""
 
     height:93
-    width:360
+    width:body.width
     color:"#00000000"
     border.width: 0
 //    Text {
@@ -30,7 +30,7 @@ Rectangle {
 //    }
         Image {
             id:icon
-            source: (pIconSrc=="")?"":("../../images/small_icons/"+pIconSrc)
+            source: (pIconSrc=="")?"":("../../images/small_icons/"+pIconSrc+".png")
             width:pIconWidth
             height:pIconHeight
             anchors.verticalCenter: parent.verticalCenter

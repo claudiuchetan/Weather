@@ -13,7 +13,7 @@ Rectangle {
     Text {
         text: msg
         color:"#fb0a26"
-        font.pixelSize: 14
+        font.pixelSize: 16
         font.bold: false
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

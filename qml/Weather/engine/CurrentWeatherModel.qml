@@ -21,14 +21,29 @@ import "WeatherData.js" as WData
             if (status == XmlListModel.Ready) {
                 if (currentModel.count>0){
                     var modelData=currentModel.get(0);
+                    var temp=modelData.temperature;
+                    var precip=modelData.precipitation;
+                    var wind=modelData.windspeed;
+                    var hum=modelData.humidity;
+                    var pres=modelData.pressure;
+                    if (modelData.weather!=""){
+                        if (temp==""){temp=0;}
+                        if (precip==""){precip=0;}
+                        if (wind==""){wind=0;}
+                        if (hum==""){hum=0;}
+                        if (pres==""){pres=0;}
+
+                    }
                     var wID=0;
-                    wID=WData.saveCurrentWeather("current",gLocationID,modelData.temperature,"","",modelData.precipitation,modelData.windspeed,modelData.humidity,modelData.pressure,modelData.weather,"",modelData.code,modelData.image);
+                    wID=WData.saveCurrentWeather("current",gLocationID,temp,"","",precip,wind,hum,pres,modelData.weather,"",modelData.code,modelData.image);
                     window.modelReady=true;
                     //returns the id of the row which was saved in Weather_Data
                     window.modelData=wID;
                     window.locationsModel.reload();
                 }
                 window.getCurrentWeatherFromQueue();
+            } else if (status == XmlListModel.Error) {
+//                window.getLogic().showWeatherError(currentModel.source,currentModel.errorString());
             }
         }
     }

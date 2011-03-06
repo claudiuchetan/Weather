@@ -11,7 +11,7 @@ Row {
     anchors.bottom: parent.bottom
     anchors.bottomMargin: 15
     anchors.horizontalCenter: parent.horizontalCenter
-    spacing:isLandscape?80:30
+    spacing:30
     Button {
         id:buttonHome
         icon:"home"
@@ -39,6 +39,7 @@ Row {
         customWidth: 42
         anchors.top: parent.top
         onClicked: {
+            window.locationsForecastModel.reload();
             switchView("Analytics");
         }
     }

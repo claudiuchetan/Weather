@@ -20,6 +20,7 @@ function initDB() {
 }
 
 function clean(){
+    console.log("CLEAN");
     cleanDB();
 }
 function addLocation(name) {
@@ -40,5 +41,6 @@ function deleteLocation(name) {
                 res = "Unknown";     }  })
     return res;
 }
+
 
 

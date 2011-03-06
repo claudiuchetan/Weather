@@ -19,10 +19,9 @@ Rectangle {
     property string backNightLandscape:"images/background_landscape_night.png"
     property string cBackgroundDay:backDayPortrait
     property string cBackgroundNight:backNightPortrait
-    property bool isLandscape: (body.width>450)
     property ListModel locationsModel: lModel
     property ListModel locationsForecastModel: fModel
-    property string currentLocation: ""
+    property int currentLocation: 1
     property int gLocationID:0
     property string gLongitude:""
     property string gLatitude:""
@@ -87,8 +86,10 @@ Rectangle {
     }
 
     function addLocation() {
-        LocationData.addLocation(selectedCity,selectedCountry,window.gLongitude,window.gLatitude);
+//        LocationData.addLocation(selectedCity,selectedCountry,window.gLongitude,window.gLatitude);
+        LocationData.addLocation(selectedCity,selectedCountry,"1","1");
         lModel.reload();
+        fModel.reload();
     }
 
     function addGpsLocation(city, country, longitude, latitude) {
@@ -103,6 +104,7 @@ Rectangle {
         //get the weather data from server
         var queryString=WeatherData.createQueryString(locID,"current");
         weatherModel.source="http://www.worldweatheronline.com/feed/weather.ashx?q="+queryString;
+        console.log(weatherModel.source);
         weatherModel.reload();
         //get the weather data from DB
         return WeatherData.getWeatherRow(window.modelData);
@@ -117,9 +119,9 @@ Rectangle {
             var locationID=Logic.currentWeatherQueue.pop();
             gLocationID=locationID;
             var data=getCurrentInfo(locationID);
-            //            if (data!="") {
-            //                weatherTimer.start();
-            //            }
+                     if (data!="") {
+                           weatherTimer.start();
+                        }
         }
     }
 
@@ -316,41 +318,6 @@ Rectangle {
         MainMenu {
             z:1000
             id:mainMenu
-        }
-
-        /*
-      Handler for device rotation
-      */
-        Behavior on rotation {
-            PropertyAnimation {
-                duration: 1000; easing.type: Easing.OutExpo //Easing.OutElastic
-            }
-        }
-
-
-        /*
-      Listener for device orientation changes
-      */
-        OrientationSensor {
-            id: orientation
-            active: true
-            onReadingChanged: {
-                if (reading.orientation == OrientationReading.TopUp) {
-                    setOrientation(0);
-                }
-                else if (reading.orientation == OrientationReading.TopDown)
-                {
-                    setOrientation(180);
-                }
-                else if (reading.orientation == OrientationReading.LeftUp)
-                {
-                    setOrientation(-90);
-                }
-                else if (reading.orientation == OrientationReading.RightUp)
-                {
-                    setOrientation(90);
-                }
-            }
         }
 
         PopupDialog {

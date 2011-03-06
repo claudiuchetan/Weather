@@ -23,8 +23,16 @@ XmlListModel {
             if (itemsNo>0){
                 for (var i=0;i<itemsNo;i++) {
                     var forecastData=forecastModel.get(i);
+                    var tMin=forecastData.tempMin;
+                    var tMax=forecastData.tempMax;
+                    var prec=forecastData.precipitation;
+                    var winds=forecastData.windspeed;
+                    if (tMin==""){tMin=0;}
+                    if (tMax==""){tMax=0;}
+                    if (prec==""){prec=0;}
+                    if (winds==""){winds=0;}
                     var wID=0;
-                    wID=WInfo.saveCurrentWeather("forecast",gLocationID,"",forecastData.tempMin,forecastData.tempMax,forecastData.precipitation,forecastData.windspeed,"","",forecastData.weatherDesc,forecastData.date,forecastData.code,forecastData.image);
+                    wID=WInfo.saveCurrentWeather("forecast",gLocationID,"",tMin,tMax,prec,winds,"","",forecastData.weatherDesc,forecastData.date,forecastData.code,forecastData.image);
                     wIDs=wID;
                 }
             window.modelReady=true;

@@ -4,9 +4,11 @@ Flow {
     property string locationName: "nowhere"
     property string weatherState: "undefined"
     property string temperature: "-13"
-    property string iconSrc: "clear.png"
+    property string iconSrc: "clear"
     property int iconWidth: 100
     property int iconHeight: 100
+    property bool nightMode: false;
+    property string nightSrc: (nightMode)?"_night":"";
     clip: true
     FontLoader {
         id:widgetFont
@@ -24,7 +26,7 @@ Flow {
             fillMode: Image.Tile
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            source: (iconSrc=="")?"":("../../images/"+iconSrc)
+            source: (iconSrc=="")?"":("../../images/"+iconSrc+""+nightSrc+".png")
         }
         Loader {
             width:100
@@ -36,15 +38,15 @@ Flow {
     }
     Rectangle {
         id:infoWrapper
-        width:isLandscape?280:360
+        width:360
         height:250
         color: "#00000000"
         Text {
             id:location
             text: locationName
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: isLandscape?parent.verticalCenter:parent.top
-            anchors.verticalCenterOffset: isLandscape?-40:-30
+            anchors.verticalCenter: parent.top
+            anchors.verticalCenterOffset: -30
             font.family: widgetFont.name
             font.pixelSize: 30
             style: Text.Raised

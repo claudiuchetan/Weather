@@ -14,6 +14,7 @@ Item {
                 width:body.width
                 height:body.height
                 locationName: city
+                nightMode:night
                 temperature: (degrees=="")?"":(degrees+"\u00B0C")
                 weatherState: description
                 iconSrc: (icon=="")?"":icon.src
@@ -28,11 +29,11 @@ Item {
         orientation: ListView.Horizontal
         snapMode: ListView.SnapToItem
         flickDeceleration: 2000
+        currentIndex: window.currentLocation-1
     }
 
     Hr {
         y:240
         z:12
-        visible: !isLandscape
     }
 }
